@@ -1,0 +1,12 @@
+id,nombre,zona,categorias_comida,ambiente,pet_friendly,juegos_niños,accesible,promociones,acepta_reservas,precio_promedio,metodos_pago,opciones_saludables,nivel_servicio,capacidad
+R1,Pollo Campero,zona 10,comida rápida;guatemalteca,familiar,TRUE,TRUE,TRUE,FALSE,TRUE,50,efectivo;tarjeta,TRUE,3,100
+R2,Flor de Lis,zona 4,guatemalteca gourmet,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,250,tarjeta,TRUE,5,30
+R3,Monticelli,zona 10,italiana,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,300,tarjeta,TRUE,5,40
+R4,Arepa Soul,zona 13,venezolana;fusión,moderno,TRUE,FALSE,TRUE,TRUE,TRUE,150,efectivo;tarjeta,TRUE,4,50
+R5,La Casa del Tamal,zona 1,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,60,efectivo,TRUE,3,80
+R6,Gianni's,zona 10,italiana,romántico,FALSE,FALSE,TRUE,FALSE,TRUE,200,tarjeta,TRUE,4,35
+R7,Mercado 24,zona 4,latinoamericana;fusión,moderno,FALSE,FALSE,FALSE,FALSE,TRUE,180,tarjeta,TRUE,5,25
+R8,Hacienda Real,zona 10,carnes,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,220,tarjeta,TRUE,4,60
+R9,Donde Joselito,zona 11,argentina,familiar,FALSE,FALSE,TRUE,FALSE,FALSE,180,efectivo;tarjeta,TRUE,4,100
+R10,Ambia,zona 10,fusión gourmet,moderno,FALSE,FALSE,TRUE,FALSE,TRUE,280,tarjeta,TRUE,5,40
+ 
