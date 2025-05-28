@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Recommendation System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .filters-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .filters-panel h2 {
+            color: #5a67d8;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            outline: none;
+            border-color: #5a67d8;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.2);
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .results-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .results-header h2 {
+            color: #5a67d8;
+            flex: 1;
+        }
+
+        .user-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-selector select {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #5a67d8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .restaurant-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #5a67d8;
+        }
+
+        .restaurant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .restaurant-price {
+            background: #48bb78;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .compatibility-score {
+            background: #5a67d8;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .restaurant-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .detail-item i {
+            width: 16px;
+            color: #5a67d8;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-results i {
+            font-size: 4em;
+            color: #cbd5e0;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .filters-panel {
+                position: static;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .restaurant-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-utensils"></i> Restaurant Finder</h1>
+            <p>Discover your perfect dining experience with personalized recommendations</p>
+        </div>
+
+        <div class="main-content">
+            <div class="filters-panel">
+                <h2><i class="fas fa-filter"></i> Search Preferences</h2>
+                
+                <div class="filter-group">
+                    <label for="budget">Budget (Max Price)</label>
+                    <input type="number" id="budget" placeholder="Enter maximum budget" value="300" min="0">
+                </div>
+
+                <div class="filter-group">
+                    <label for="zone">Preferred Zone</label>
+                    <select id="zone">
+                        <option value="">Any Zone</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="categories">Food Categories</label>
+                    <select id="categories" multiple>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Special Requirements</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pet_friendly">
+                            <label for="pet_friendly">Pet Friendly</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kids_games">
+                            <label for="kids_games">Kids Games</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="accessible">
+                            <label for="accessible">Wheelchair Accessible</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="promotions">
+                            <label for="promotions">Has Promotions</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="min_service_level">Minimum Service Level (1-5)</label>
+                    <input type="number" id="min_service_level" min="1" max="5" value="3">
+                </div>
+
+                <button class="search-btn" onclick="searchRestaurants()">
+                    <i class="fas fa-search"></i> Find Restaurants
+                </button>
+            </div>
+
+            <div class="results-panel">
+                <div class="results-header">
+                    <h2><i class="fas fa-star"></i> Recommendations</h2>
+                    <div class="user-selector">
+                        <label for="user-select">Get recommendations for:</label>
+                        <select id="user-select" onchange="getUserRecommendations()">
+                            <option value="">Select a user...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="error-message" id="error-message"></div>
+
+                <div class="loading-spinner" id="loading">
+                    <div class="spinner"></div>
+                    <p>Finding the perfect restaurants for you...</p>
+                </div>
+
+                <div id="results-container">
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>Ready to find amazing restaurants?</h3>
+                        <p>Use the filters on the left to search for restaurants, or select a user above to get personalized recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:5000';
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUsers();
+            loadFilterOptions();
+        });
+
+        // Load users for the dropdown
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users`);
+                const data = await response.json();
+                
+                const userSelect = document.getElementById('user-select');
+                userSelect.innerHTML = '<option value="">Select a user...</option>';
+                
+                if (data.status === 'success' && data.users) {
+                    data.users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.name;
+                        option.textContent = `${user.name} (Age: ${user.age}, Budget: $${user.budget})`;
+                        userSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Load filter options (zones, categories)
+        async function loadFilterOptions() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/restaurants`);
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.restaurants) {
+                    // Extract unique zones and categories
+                    const zones = new Set();
+                    const categories = new Set();
+                    
+                    data.restaurants.forEach(restaurant => {
+                        if (restaurant.zones) {
+                            restaurant.zones.forEach(zone => zones.add(zone));
+                        }
+                        if (restaurant.categories) {
+                            restaurant.categories.forEach(category => categories.add(category));
+                        }
+                    });
+                    
+                    // Populate zone dropdown
+                    const zoneSelect = document.getElementById('zone');
+                    Array.from(zones).sort().forEach(zone => {
+                        const option = document.createElement('option');
+                        option.value = zone;
+                        option.textContent = zone;
+                        zoneSelect.appendChild(option);
+                    });
+                    
+                    // Populate categories dropdown
+                    const categoriesSelect = document.getElementById('categories');
+                    Array.from(categories).sort().forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category;
+                        option.textContent = category;
+                        categoriesSelect.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading filter options:', error);
+            }
+        }
+
+        // Get recommendations for a specific user
+        async function getUserRecommendations() {
+            const userName = document.getElementById('user-select').value;
+            if (!userName) return;
+            
+            showLoading(true);
+            hideError();
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/recommendations/${encodeURIComponent(userName)}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayResults(data.recommendations, `Personalized recommendations for ${userName}`);
+                } else {
+                    showError(data.message || 'Failed to get recommendations');
+                }
+            } catch (error) {
+                console.error('Error getting recommendations:', error);
+                showError('Failed to connect to the server. Please make sure your API is running.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Search restaurants with custom filters
+        async function searchRestaurants() {
+            showLoading(true);
+            hideError();
+            
+            // Collect filter values
+            const filters = {
+                budget: parseInt(document.getElementById('budget').value) || 1000,
+                zone: document.getElementById('zone').value,
+                categories: Array.from(document.getElementById('categories').selectedOptions).map(option => option.value),
+                pet_friendly: document.getElementById('pet_friendly').checked,
+                kids_games: document.getElementById('kids_games').checked,
+                accessible: document.getElementById('accessible').checked,
+                promotions: document.getElementById('promotions').checked,
+                min_service_level: parseInt(document.getElementById('min_service_level').value) || 1
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/recommendations/advanced`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(filters)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayResults(data.recommendations, 'Search Results');
+                } else {
+                    showError(data.message || 'Failed to search restaurants');
+                }
+            } catch (error) {
+                console.error('Error searching restaurants:', error);
+                showError('Failed to connect to the server. Please make sure your API is running.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display restaurant results
+        function displayResults(restaurants, title) {
+            const container = document.getElementById('results-container');
+            
+            if (!restaurants || restaurants.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-sad-tear"></i>
+                        <h3>No restaurants found</h3>
+                        <p>Try adjusting your search criteria or budget to find more options.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `<h3 style="margin-bottom: 20px; color: #4a5568;">${title} (${restaurants.length} found)</h3>`;
+            
+            restaurants.forEach(restaurant => {
+                html += `
+                    <div class="restaurant-card">
+                        <div class="restaurant-header">
+                            <div>
+                                <div class="restaurant-name">${restaurant.restaurant_name || restaurant.name}</div>
+                            </div>
+                            <div>
+                                <span class="restaurant-price">$${restaurant.price}</span>
+                                ${restaurant.compatibility_score ? `<span class="compatibility-score">Score: ${restaurant.compatibility_score}</span>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="restaurant-details">
+                            <div class="detail-item">
+                                <i class="fas fa-star"></i>
+                                <span>Service Level: ${restaurant.service_level}/5</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Wait Time: ${restaurant.wait_time || 'N/A'} min</span>
+                            </div>
+                            ${restaurant.pet_friendly ? '<div class="detail-item"><i class="fas fa-paw"></i><span>Pet Friendly</span></div>' : ''}
+                            ${restaurant.kids_games ? '<div class="detail-item"><i class="fas fa-child"></i><span>Kids Games</span></div>' : ''}
+                            ${restaurant.accessible ? '<div class="detail-item"><i class="fas fa-wheelchair"></i><span>Accessible</span></div>' : ''}
+                            ${restaurant.promotions ? '<div class="detail-item"><i class="fas fa-tag"></i><span>Has Promotions</span></div>' : ''}
+                        </div>
+                        
+                        <div class="tags">
+                            ${(restaurant.categories || []).map(cat => `<span class="tag">${cat}</span>`).join('')}
+                            ${(restaurant.ambiance || []).map(amb => `<span class="tag">${amb}</span>`).join('')}
+                            ${(restaurant.zones || []).map(zone => `<span class="tag">${zone}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Utility functions
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error-message').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
