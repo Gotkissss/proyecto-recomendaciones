@@ -1,12 +1,26 @@
-id,nombre,zona,categorias_comida,ambiente,pet_friendly,juegos_niños,accesible,promociones,acepta_reservas,precio_promedio,metodos_pago,opciones_saludables,nivel_servicio,capacidad
-R1,Pollo Campero,zona 10,comida rápida;guatemalteca,familiar,TRUE,TRUE,TRUE,FALSE,TRUE,50,efectivo;tarjeta,TRUE,3,100
-R2,Flor de Lis,zona 4,guatemalteca gourmet,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,250,tarjeta,TRUE,5,30
-R3,Monticelli,zona 10,italiana,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,300,tarjeta,TRUE,5,40
-R4,Arepa Soul,zona 13,venezolana;fusión,moderno,TRUE,FALSE,TRUE,TRUE,TRUE,150,efectivo;tarjeta,TRUE,4,50
-R5,La Casa del Tamal,zona 1,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,60,efectivo,TRUE,3,80
-R6,Gianni's,zona 10,italiana,romántico,FALSE,FALSE,TRUE,FALSE,TRUE,200,tarjeta,TRUE,4,35
-R7,Mercado 24,zona 4,latinoamericana;fusión,moderno,FALSE,FALSE,FALSE,FALSE,TRUE,180,tarjeta,TRUE,5,25
-R8,Hacienda Real,zona 10,carnes,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,220,tarjeta,TRUE,4,60
-R9,Donde Joselito,zona 11,argentina,familiar,FALSE,FALSE,TRUE,FALSE,FALSE,180,efectivo;tarjeta,TRUE,4,100
-R10,Ambia,zona 10,fusión gourmet,moderno,FALSE,FALSE,TRUE,FALSE,TRUE,280,tarjeta,TRUE,5,40
- 
+id,nombre,zona,categorias_comida,ambiente,pet_friendly,juegos_niños,accesible,promociones,acepta_reservas,precio_promedio,metodos_pago,opciones_saludables,nivel_servicio,capacidad,telefono,horario,delivery,direccion
+R1,Pollo Campero,zona 10,comida rápida;guatemalteca,familiar,TRUE,TRUE,TRUE,FALSE,TRUE,50,efectivo;tarjeta,TRUE,3,100,2234-5678,7:00-22:00,TRUE,10 Calle 3-17 Zona 10
+R2,Flor de Lis,zona 4,guatemalteca gourmet,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,250,tarjeta,TRUE,5,30,2345-6789,12:00-22:00,FALSE,7a Avenida 12-46 Zona 4
+R3,Monticelli,zona 10,italiana,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,300,tarjeta,TRUE,5,40,2456-7890,18:00-23:00,TRUE,12 Calle 1-25 Zona 10
+R4,Arepa Soul,zona 13,venezolana;fusión,moderno,TRUE,FALSE,TRUE,TRUE,TRUE,150,efectivo;tarjeta,TRUE,4,50,2567-8901,11:00-21:00,TRUE,21 Calle 7-42 Zona 13
+R5,La Casa del Tamal,zona 1,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,60,efectivo,TRUE,3,80,2678-9012,6:00-18:00,FALSE,8a Calle 9-12 Zona 1
+R6,Gianni's,zona 10,italiana,romántico,FALSE,FALSE,TRUE,FALSE,TRUE,200,tarjeta,TRUE,4,35,2789-0123,17:00-23:00,FALSE,13 Calle 8-44 Zona 10
+R7,Mercado 24,zona 4,latinoamericana;fusión,moderno,FALSE,FALSE,FALSE,FALSE,TRUE,180,tarjeta,TRUE,5,25,2890-1234,12:00-24:00,TRUE,9a Avenida 15-25 Zona 4
+R8,Hacienda Real,zona 10,carnes,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,220,tarjeta,TRUE,4,60,2901-2345,12:00-22:00,FALSE,14 Calle 6-15 Zona 10
+R9,Donde Joselito,zona 11,argentina,familiar,FALSE,FALSE,TRUE,FALSE,FALSE,180,efectivo;tarjeta,TRUE,4,100,2012-3456,11:00-21:00,FALSE,5a Avenida 18-30 Zona 11
+R10,Ambia,zona 10,fusión gourmet,moderno,FALSE,FALSE,TRUE,FALSE,TRUE,280,tarjeta,TRUE,5,40,2123-4567,18:00-24:00,TRUE,16 Calle 2-88 Zona 10
+R11,Tanoshii Sushi,zona 14,japonesa;asiática,moderno,FALSE,FALSE,TRUE,TRUE,TRUE,200,tarjeta;efectivo,TRUE,4,45,2234-5679,12:00-22:00,TRUE,3a Avenida 12-44 Zona 14
+R12,Mariscos El Puerto,zona 13,mariscos,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,160,efectivo;tarjeta,TRUE,3,70,2345-6780,11:00-21:00,FALSE,18 Calle 4-25 Zona 13
+R13,Taco Loco,zona 9,mexicana,casual,TRUE,TRUE,TRUE,TRUE,FALSE,80,efectivo;tarjeta,TRUE,3,60,2456-7891,10:00-22:00,TRUE,11 Avenida 6-33 Zona 9
+R14,Verde Vida,zona 15,vegetariana,saludable,TRUE,FALSE,TRUE,FALSE,TRUE,120,tarjeta,TRUE,4,40,2567-8902,8:00-20:00,TRUE,4 Calle 15-27 Zona 15
+R15,Dulcería La Antigua,zona 1,postres,tradicional,FALSE,TRUE,TRUE,FALSE,FALSE,40,efectivo,FALSE,3,25,2678-9013,9:00-19:00,FALSE,6a Avenida 11-18 Zona 1
+R16,Dragon Palace,zona 12,china;asiática,familiar,FALSE,FALSE,TRUE,FALSE,TRUE,140,efectivo;tarjeta,TRUE,3,80,2789-0124,11:00-22:00,TRUE,8 Calle 12-15 Zona 12
+R17,Le Bistro,zona 10,francesa,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,350,tarjeta,TRUE,5,25,2890-1235,19:00-23:00,FALSE,15 Calle 4-20 Zona 10
+R18,Tony Roma's,zona 10,americana;carnes,familiar,FALSE,TRUE,TRUE,TRUE,TRUE,220,efectivo;tarjeta,TRUE,4,90,2901-2346,12:00-22:00,TRUE,20 Calle 7-55 Zona 10
+R19,Churrascaria Brasil,zona 14,brasileña;carnes,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,280,tarjeta,TRUE,4,60,2012-3457,18:00-23:00,FALSE,6a Avenida 14-78 Zona 14
+R20,Café Luna,zona 1,guatemalteca;postres,acogedor,TRUE,FALSE,TRUE,FALSE,FALSE,70,efectivo;tarjeta,TRUE,3,35,2123-4568,7:00-20:00,FALSE,9a Calle 8-24 Zona 1
+R21,El Mesón,zona 4,guatemalteca gourmet,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,200,tarjeta,TRUE,5,50,2234-5680,12:00-22:00,FALSE,12 Avenida 5-30 Zona 4
+R22,Sushi Itto,zona 11,japonesa,moderno,FALSE,FALSE,TRUE,TRUE,TRUE,180,tarjeta,TRUE,4,40,2345-6781,12:00-22:00,TRUE,7a Calle 16-42 Zona 11
+R23,La Parrilla Chapina,zona 13,guatemalteca;carnes,tradicional,FALSE,TRUE,TRUE,FALSE,TRUE,150,efectivo;tarjeta,TRUE,4,70,2456-7892,11:00-21:00,FALSE,22 Calle 9-18 Zona 13
+R24,Healthy Corner,zona 15,vegetariana;fusión,saludable,TRUE,FALSE,TRUE,FALSE,TRUE,110,tarjeta,TRUE,4,30,2567-8903,8:00-19:00,TRUE,2 Calle 18-35 Zona 15
+R25,Panadería Americana,zona 9,postres;americana,casual,FALSE,TRUE,TRUE,TRUE,FALSE,45,efectivo,FALSE,3,40,2678-9014,6:00-20:00,FALSE,13 Avenida 8-20 Zona 9
