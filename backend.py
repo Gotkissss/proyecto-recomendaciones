@@ -569,6 +569,77 @@ def health_check():
             "timestamp": datetime.now().isoformat()
         }), 500
 
+
+
+# Add these debug endpoints to your backend.py to verify data import
+
+@app.route('/debug/categories', methods=['GET'])
+def debug_categories():
+    """Debug endpoint to check all categories in the database"""
+    try:
+        query = """
+        MATCH (c:Category)
+        RETURN c.id as id, c.nombre as nombre
+        ORDER BY c.id
+        """
+        
+        results = db.execute_query(query)
+        
+        return jsonify({
+            'status': 'success',
+            'total_categories': len(results),
+            'categories': results
+        })
+        
+    except Exception as e:
+        return handle_error(e, "Failed to fetch debug categories")
+
+@app.route('/debug/restaurant-categories', methods=['GET'])
+def debug_restaurant_categories():
+    """Debug endpoint to check restaurant-category relationships"""
+    try:
+        query = """
+        MATCH (r:Restaurant)-[:HAS_CATEGORY]->(c:Category)
+        RETURN r.id as restaurant_id, r.nombre as restaurant_name, 
+               c.id as category_id, c.nombre as category_name
+        ORDER BY r.id, c.id
+        """
+        
+        results = db.execute_query(query)
+        
+        return jsonify({
+            'status': 'success',
+            'total_relationships': len(results),
+            'relationships': results
+        })
+        
+    except Exception as e:
+        return handle_error(e, "Failed to fetch debug restaurant-categories")
+
+@app.route('/debug/node-counts', methods=['GET'])
+def debug_node_counts():
+    """Debug endpoint to check node counts in the database"""
+    try:
+        queries = {
+            'restaurants': "MATCH (r:Restaurant) RETURN count(r) as count",
+            'categories': "MATCH (c:Category) RETURN count(c) as count",
+            'has_category_relationships': "MATCH ()-[:HAS_CATEGORY]->() RETURN count(*) as count"
+        }
+        
+        results = {}
+        for name, query in queries.items():
+            result = db.execute_query(query)
+            results[name] = result[0]['count'] if result else 0
+        
+        return jsonify({
+            'status': 'success',
+            'node_counts': results
+        })
+        
+    except Exception as e:
+        return handle_error(e, "Failed to fetch debug node counts")
+
+
 if __name__ == '__main__':
     try:
         db.connect()
@@ -579,36 +650,3 @@ if __name__ == '__main__':
     finally:
         db.close()
 
-
-# Add this route to your existing Flask backend
-@app.route('/categories', methods=['GET'])
-def get_categories():
-    """Get all available restaurant categories"""
-    try:
-        cursor = connection.cursor()
-        
-        # Get all unique categories from the database
-        query = """
-        SELECT DISTINCT category 
-        FROM restaurant_categories rc
-        JOIN categories c ON rc.category_id = c.id
-        ORDER BY category
-        """
-        
-        cursor.execute(query)
-        categories = [row[0] for row in cursor.fetchall()]
-        
-        return jsonify({
-            'status': 'success',
-            'categories': categories
-        })
-        
-    except Exception as e:
-        print(f"Error fetching categories: {e}")
-        return jsonify({
-            'status': 'error',
-            'message': 'Failed to fetch categories'
-        }), 500
-    finally:
-        if cursor:
-            cursor.close()
