@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Recommendation System</title>
+    <title>FoodieFind - Discover Amazing Restaurants</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <style>
         * {
@@ -13,86 +13,453 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            color: #1a202c;
+            line-height: 1.6;
         }
 
-        .container {
+        /* Header & Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .filters-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-
-        .filters-panel h2 {
-            color: #5a67d8;
-            margin-bottom: 20px;
+        .logo {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #e53e3e;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .filter-group {
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #e53e3e;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .login-btn, .signup-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .login-btn {
+            color: #e53e3e;
+            border: 2px solid #e53e3e;
+            background: transparent;
+        }
+
+        .signup-btn {
+            background: #e53e3e;
+            color: white;
+            border: 2px solid #e53e3e;
+        }
+
+        .login-btn:hover {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .signup-btn:hover {
+            background: #c53030;
+            border-color: #c53030;
+        }
+
+        .user-profile {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 20px 25px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-bar input::placeholder {
+            color: #a0aec0;
+        }
+
+        .search-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 20px 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #c53030;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            padding: 40px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px 25px;
+            text-decoration: none;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .action-btn:hover {
+            border-color: #e53e3e;
+            color: #e53e3e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Content Sections */
+        .section {
+            padding: 60px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2em;
+            color: #718096;
+        }
+
+        /* Restaurant Grid */
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .restaurant-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .restaurant-image {
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .restaurant-image i {
+            font-size: 3em;
+            color: white;
+            opacity: 0.7;
+        }
+
+        .restaurant-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .restaurant-content {
+            padding: 25px;
+        }
+
+        .restaurant-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .restaurant-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .restaurant-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .restaurant-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-bottom: 20px;
         }
 
-        .filter-group label {
+        .tag {
+            background: #f7fafc;
+            color: #4a5568;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+        }
+
+        .restaurant-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #e53e3e;
+            border: 2px solid #e53e3e;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #c53030;
+        }
+
+        .btn-secondary:hover {
+            background: #e53e3e;
+            color: white;
+        }
+
+        /* Loading and Empty States */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f1f5f9;
+            border-top: 4px solid #e53e3e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #718096;
+        }
+
+        .empty-state i {
+            font-size: 4em;
+            color: #cbd5e0;
+            margin-bottom: 20px;
+        }
+
+        /* Auth Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2d3748;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #4a5568;
         }
 
-        .filter-group input, .filter-group select {
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 10px;
+            padding: 12px 15px;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
 
-        .filter-group input:focus, .filter-group select:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #5a67d8;
+            border-color: #e53e3e;
         }
 
-        .checkbox-group {
+        .preferences-section {
+            margin-top: 20px;
+        }
+
+        .checkbox-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
@@ -110,512 +477,449 @@
             transform: scale(1.2);
         }
 
-        .checkbox-item label {
-            margin: 0;
-            font-weight: normal;
-            font-size: 14px;
-        }
-
-        .search-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .results-panel {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            min-height: 400px;
-        }
-
-        .results-header {
+        .modal-actions {
             display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 20px;
+            gap: 10px;
+            margin-top: 30px;
         }
 
-        .results-header h2 {
-            color: #5a67d8;
+        .btn-cancel {
+            background: #f7fafc;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
             flex: 1;
         }
 
-        .user-selector {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-selector select {
-            padding: 8px 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #5a67d8;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .restaurant-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .restaurant-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            border-color: #5a67d8;
-        }
-
-        .restaurant-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .restaurant-name {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 5px;
-        }
-
-        .restaurant-price {
-            background: #48bb78;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .compatibility-score {
-            background: #5a67d8;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .restaurant-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .detail-item i {
-            width: 16px;
-            color: #5a67d8;
-        }
-
-        .tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .tag {
-            background: #edf2f7;
-            color: #4a5568;
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }
-
-        .no-results i {
-            font-size: 4em;
-            color: #cbd5e0;
-            margin-bottom: 20px;
-        }
-
-        .error-message {
-            background: #fed7d7;
-            color: #c53030;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .main-content {
+            .nav-container {
+                padding: 0 15px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+                border-radius: 15px;
+            }
+            
+            .search-btn {
+                border-radius: 0;
+            }
+            
+            .quick-actions {
+                justify-content: center;
+            }
+            
+            .restaurant-grid {
                 grid-template-columns: 1fr;
-                gap: 20px;
             }
             
-            .filters-panel {
-                position: static;
-            }
-            
-            .checkbox-group {
-                grid-template-columns: 1fr;
-            }
-            
-            .restaurant-details {
+            .checkbox-grid {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-utensils"></i> Restaurant Finder</h1>
-            <p>Discover your perfect dining experience with personalized recommendations</p>
-        </div>
-
-        <div class="main-content">
-            <div class="filters-panel">
-                <h2><i class="fas fa-filter"></i> Search Preferences</h2>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                FoodieFind
+            </div>
+            
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#restaurants">Browse</a>
+                <a href="#favorites">My Favorites</a>
+                <a href="#profile">Profile</a>
+            </div>
+            
+            <div class="user-menu">
+                <div class="auth-buttons">
+                    <a href="#" class="login-btn" onclick="showLoginModal()">Log In</a>
+                    <a href="#" class="signup-btn" onclick="showSignupModal()">Sign Up</a>
+                </div>
                 
-                <div class="filter-group">
-                    <label for="budget">Budget (Max Price)</label>
-                    <input type="number" id="budget" placeholder="Enter maximum budget" value="300" min="0">
+                <div class="user-profile" id="user-profile">
+                    <div class="user-avatar" id="user-avatar">J</div>
+                    <span id="user-name">John Doe</span>
+                    <i class="fas fa-chevron-down"></i>
                 </div>
+            </div>
+        </div>
+    </nav>
 
-                <div class="filter-group">
-                    <label for="zone">Preferred Zone</label>
-                    <select id="zone">
-                        <option value="">Any Zone</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="categories">Food Categories</label>
-                    <select id="categories" multiple>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label>Special Requirements</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="pet_friendly">
-                            <label for="pet_friendly">Pet Friendly</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="kids_games">
-                            <label for="kids_games">Kids Games</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="accessible">
-                            <label for="accessible">Wheelchair Accessible</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="promotions">
-                            <label for="promotions">Has Promotions</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <label for="min_service_level">Minimum Service Level (1-5)</label>
-                    <input type="number" id="min_service_level" min="1" max="5" value="3">
-                </div>
-
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Discover Amazing Restaurants</h1>
+            <p>Find your perfect dining experience, tailored just for you</p>
+            
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search for restaurants, cuisines, or dishes...">
                 <button class="search-btn" onclick="searchRestaurants()">
-                    <i class="fas fa-search"></i> Find Restaurants
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
+        </div>
+    </section>
 
-            <div class="results-panel">
-                <div class="results-header">
-                    <h2><i class="fas fa-star"></i> Recommendations</h2>
-                    <div class="user-selector">
-                        <label for="user-select">Get recommendations for:</label>
-                        <select id="user-select" onchange="getUserRecommendations()">
-                            <option value="">Select a user...</option>
-                        </select>
-                    </div>
-                </div>
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <div class="container">
+            <a href="#" class="action-btn" onclick="getPersonalizedRecommendations()">
+                <i class="fas fa-magic"></i>
+                Surprise Me!
+            </a>
+            <a href="#" class="action-btn" onclick="showNearbyRestaurants()">
+                <i class="fas fa-map-marker-alt"></i>
+                Near Me
+            </a>
+            <a href="#" class="action-btn" onclick="showTopRated()">
+                <i class="fas fa-star"></i>
+                Top Rated
+            </a>
+            <a href="#" class="action-btn" onclick="showPromotions()">
+                <i class="fas fa-tag"></i>
+                Special Offers
+            </a>
+        </div>
+    </section>
 
-                <div class="error-message" id="error-message"></div>
-
-                <div class="loading-spinner" id="loading">
-                    <div class="spinner"></div>
-                    <p>Finding the perfect restaurants for you...</p>
-                </div>
-
-                <div id="results-container">
-                    <div class="no-results">
-                        <i class="fas fa-search"></i>
-                        <h3>Ready to find amazing restaurants?</h3>
-                        <p>Use the filters on the left to search for restaurants, or select a user above to get personalized recommendations.</p>
-                    </div>
-                </div>
+    <!-- Restaurant Results -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" id="results-title">Featured Restaurants</h2>
+                <p class="section-subtitle" id="results-subtitle">Popular choices in your area</p>
             </div>
+            
+            <div class="loading" id="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Finding amazing restaurants for you...</p>
+            </div>
+            
+            <div class="restaurant-grid" id="restaurant-grid">
+                <!-- Restaurants will be loaded here -->
+            </div>
+            
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <i class="fas fa-utensils"></i>
+                <h3>No restaurants found</h3>
+                <p>Try adjusting your search or browse our featured restaurants</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal">
+            <h2>Welcome Back!</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Log In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signup-modal">
+        <div class="modal">
+            <h2>Join FoodieFind!</h2>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-age">Age</label>
+                    <input type="number" id="signup-age" min="18" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-budget">Budget Range ($)</label>
+                    <select id="signup-budget" required>
+                        <option value="">Select your budget</option>
+                        <option value="100">Under $100</option>
+                        <option value="200">$100 - $200</option>
+                        <option value="300">$200 - $300</option>
+                        <option value="500">$300 - $500</option>
+                        <option value="1000">$500+</option>
+                    </select>
+                </div>
+                
+                <div class="preferences-section">
+                    <label>Preferences</label>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-pet">
+                            <label for="pref-pet">Pet Friendly</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-kids">
+                            <label for="pref-kids">Family Friendly</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-accessible">
+                            <label for="pref-accessible">Wheelchair Accessible</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pref-promotions">
+                            <label for="pref-promotions">Love Deals</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Account</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         const API_BASE_URL = 'http://localhost:5000';
-        
-        // Initialize the application
+        let currentUser = null;
+
+        // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            loadUsers();
-            loadFilterOptions();
+            checkAuthStatus();
+            loadFeaturedRestaurants();
         });
 
-        // Load users for the dropdown
-        async function loadUsers() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/users`);
-                const data = await response.json();
-                
-                const userSelect = document.getElementById('user-select');
-                userSelect.innerHTML = '<option value="">Select a user...</option>';
-                
-                if (data.status === 'success' && data.users) {
-                    data.users.forEach(user => {
-                        const option = document.createElement('option');
-                        option.value = user.name;
-                        option.textContent = `${user.name} (Age: ${user.age}, Budget: $${user.budget})`;
-                        userSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading users:', error);
+        // Auth functions
+        function checkAuthStatus() {
+            // In a real app, check for stored auth token
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                showUserProfile();
             }
         }
 
-        // Load filter options (zones, categories)
-        async function loadFilterOptions() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/restaurants`);
-                const data = await response.json();
-                
-                if (data.status === 'success' && data.restaurants) {
-                    // Extract unique zones and categories
-                    const zones = new Set();
-                    const categories = new Set();
-                    
-                    data.restaurants.forEach(restaurant => {
-                        if (restaurant.zones) {
-                            restaurant.zones.forEach(zone => zones.add(zone));
-                        }
-                        if (restaurant.categories) {
-                            restaurant.categories.forEach(category => categories.add(category));
-                        }
-                    });
-                    
-                    // Populate zone dropdown
-                    const zoneSelect = document.getElementById('zone');
-                    Array.from(zones).sort().forEach(zone => {
-                        const option = document.createElement('option');
-                        option.value = zone;
-                        option.textContent = zone;
-                        zoneSelect.appendChild(option);
-                    });
-                    
-                    // Populate categories dropdown
-                    const categoriesSelect = document.getElementById('categories');
-                    Array.from(categories).sort().forEach(category => {
-                        const option = document.createElement('option');
-                        option.value = category;
-                        option.textContent = category;
-                        categoriesSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading filter options:', error);
-            }
+        function showUserProfile() {
+            document.querySelector('.auth-buttons').style.display = 'none';
+            document.getElementById('user-profile').style.display = 'flex';
+            document.getElementById('user-name').textContent = currentUser.name;
+            document.getElementById('user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
         }
 
-        // Get recommendations for a specific user
-        async function getUserRecommendations() {
-            const userName = document.getElementById('user-select').value;
-            if (!userName) return;
-            
-            showLoading(true);
-            hideError();
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/recommendations/${encodeURIComponent(userName)}`);
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    displayResults(data.recommendations, `Personalized recommendations for ${userName}`);
-                } else {
-                    showError(data.message || 'Failed to get recommendations');
-                }
-            } catch (error) {
-                console.error('Error getting recommendations:', error);
-                showError('Failed to connect to the server. Please make sure your API is running.');
-            } finally {
-                showLoading(false);
-            }
+        function showLoginModal() {
+            document.getElementById('login-modal').style.display = 'flex';
         }
 
-        // Search restaurants with custom filters
-        async function searchRestaurants() {
-            showLoading(true);
-            hideError();
+        function showSignupModal() {
+            document.getElementById('signup-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('signup-modal').style.display = 'none';
+        }
+
+        // Handle login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
             
-            // Collect filter values
-            const filters = {
-                budget: parseInt(document.getElementById('budget').value) || 1000,
-                zone: document.getElementById('zone').value,
-                categories: Array.from(document.getElementById('categories').selectedOptions).map(option => option.value),
-                pet_friendly: document.getElementById('pet_friendly').checked,
-                kids_games: document.getElementById('kids_games').checked,
-                accessible: document.getElementById('accessible').checked,
-                promotions: document.getElementById('promotions').checked,
-                min_service_level: parseInt(document.getElementById('min_service_level').value) || 1
-            };
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/recommendations/advanced`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(filters)
+            // In a real app, validate credentials with backend
+            // For demo, we'll just check if user exists
+            fetch(`${API_BASE_URL}/users/${encodeURIComponent(username)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        currentUser = data.user;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        showUserProfile();
+                        closeModal();
+                        loadPersonalizedRecommendations();
+                    } else {
+                        alert('User not found. Please sign up first.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Login error:', error);
+                    alert('Login failed. Please try again.');
                 });
-                
-                const data = await response.json();
-                
+        });
+
+        // Handle signup
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('signup-name').value,
+                age: parseInt(document.getElementById('signup-age').value),
+                budget: parseInt(document.getElementById('signup-budget').value),
+                has_pet: document.getElementById('pref-pet').checked,
+                has_children: document.getElementById('pref-kids').checked,
+                needs_accessibility: document.getElementById('pref-accessible').checked,
+                wants_promotions: document.getElementById('pref-promotions').checked,
+                group_size: 2
+            };
+
+            fetch(`${API_BASE_URL}/add_user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
                 if (data.status === 'success') {
-                    displayResults(data.recommendations, 'Search Results');
+                    currentUser = { ...userData, id: data.user.id };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showUserProfile();
+                    closeModal();
+                    loadPersonalizedRecommendations();
+                    alert('Account created successfully!');
                 } else {
-                    showError(data.message || 'Failed to search restaurants');
+                    alert('Failed to create account: ' + data.message);
                 }
-            } catch (error) {
-                console.error('Error searching restaurants:', error);
-                showError('Failed to connect to the server. Please make sure your API is running.');
-            } finally {
-                showLoading(false);
-            }
+            })
+            .catch(error => {
+                console.error('Signup error:', error);
+                alert('Signup failed. Please try again.');
+            });
+        });
+
+        // Restaurant loading functions
+        function showLoading(show = true) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('restaurant-grid').style.display = show ? 'none' : 'grid';
+            document.getElementById('empty-state').style.display = 'none';
         }
 
-        // Display restaurant results
-        function displayResults(restaurants, title) {
-            const container = document.getElementById('results-container');
+        function loadFeaturedRestaurants() {
+            showLoading(true);
             
-            if (!restaurants || restaurants.length === 0) {
-                container.innerHTML = `
-                    <div class="no-results">
-                        <i class="fas fa-sad-tear"></i>
-                        <h3>No restaurants found</h3>
-                        <p>Try adjusting your search criteria or budget to find more options.</p>
-                    </div>
-                `;
-                return;
-            }
+            fetch(`${API_BASE_URL}/restaurants`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        displayRestaurants(data.restaurants.slice(0, 6), 'Featured Restaurants', 'Popular choices in your area');
+                    } else {
+                        showEmptyState();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading restaurants:', error);
+                    showEmptyState();
+                })
+                .finally(() => showLoading(false));
+        }
+
+        function loadPersonalizedRecommendations() {
+            if (!currentUser) return;
             
-            let html = `<h3 style="margin-bottom: 20px; color: #4a5568;">${title} (${restaurants.length} found)</h3>`;
+            showLoading(true);
+            
+            fetch(`${API_BASE_URL}/recommendations/${encodeURIComponent(currentUser.name)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.recommendations.length > 0) {
+                        displayRestaurants(data.recommendations, `Perfect for ${currentUser.name}`, 'Personalized recommendations just for you');
+                    } else {
+                        loadFeaturedRestaurants();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading recommendations:', error);
+                    loadFeaturedRestaurants();
+                })
+                .finally(() => showLoading(false));
+        }
+
+        function searchRestaurants() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) return;
+            
+            showLoading(true);
+            
+            fetch(`${API_BASE_URL}/restaurants/search?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.results.length > 0) {
+                        displayRestaurants(data.results, `Search Results for "${query}"`, `Found ${data.count} restaurants`);
+                    } else {
+                        showEmptyState();
+                    }
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    showEmptyState();
+                })
+                .finally(() => showLoading(false));
+        }
+
+        function displayRestaurants(restaurants, title, subtitle) {
+            document.getElementById('results-title').textContent = title;
+            document.getElementById('results-subtitle').textContent = subtitle;
+            
+            const grid = document.getElementById('restaurant-grid');
+            grid.innerHTML = '';
             
             restaurants.forEach(restaurant => {
-                html += `
-                    <div class="restaurant-card">
-                        <div class="restaurant-header">
-                            <div>
-                                <div class="restaurant-name">${restaurant.restaurant_name || restaurant.name}</div>
-                            </div>
-                            <div>
-                                <span class="restaurant-price">$${restaurant.price}</span>
-                                ${restaurant.compatibility_score ? `<span class="compatibility-score">Score: ${restaurant.compatibility_score}</span>` : ''}
-                            </div>
-                        </div>
-                        
-                        <div class="restaurant-details">
-                            <div class="detail-item">
-                                <i class="fas fa-star"></i>
-                                <span>Service Level: ${restaurant.service_level}/5</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-clock"></i>
-                                <span>Wait Time: ${restaurant.wait_time || 'N/A'} min</span>
-                            </div>
-                            ${restaurant.pet_friendly ? '<div class="detail-item"><i class="fas fa-paw"></i><span>Pet Friendly</span></div>' : ''}
-                            ${restaurant.kids_games ? '<div class="detail-item"><i class="fas fa-child"></i><span>Kids Games</span></div>' : ''}
-                            ${restaurant.accessible ? '<div class="detail-item"><i class="fas fa-wheelchair"></i><span>Accessible</span></div>' : ''}
-                            ${restaurant.promotions ? '<div class="detail-item"><i class="fas fa-tag"></i><span>Has Promotions</span></div>' : ''}
-                        </div>
-                        
-                        <div class="tags">
-                            ${(restaurant.categories || []).map(cat => `<span class="tag">${cat}</span>`).join('')}
-                            ${(restaurant.ambiance || []).map(amb => `<span class="tag">${amb}</span>`).join('')}
-                            ${(restaurant.zones || []).map(zone => `<span class="tag">${zone}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
+                const card = createRestaurantCard(restaurant);
+                grid.appendChild(card);
             });
             
-            container.innerHTML = html;
+            document.getElementById('empty-state').style.display = 'none';
         }
 
-        // Utility functions
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
-        }
-
-        function showError(message) {
-            const errorElement = document.getElementById('error-message');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-        }
-
-        function hideError() {
-            document.getElementById('error-message').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+        function createRestaurantCard(restaurant) {
+            const card = document.createElement('div');
+            card.className = 'restaurant-card';
+            
+            const name = restaurant.restaurant_name || restaurant.name;
+            const price = restaurant.price;
+            const categories = restaurant.categories || [];
+            const zones = restaurant.zones || [];
+            const ambiance = restaurant.ambiance || [];
+            
+            card.innerHTML = `
+                <div class="restaurant-image">
+                    <i class="fas fa-utensils"></i>
+                    <div class="restaurant-badge">$${price}</div>
+                </div>
+                <div class="restaurant-content">
+                    <h3 class="restaurant-name">${name}</h3>
+                    <div class="restaurant-info">
+                        <span><i class="fas fa-star"></i> ${restaurant.service_level || 4}/5</span>
+                        <span><i class="fas fa-clock"></i> ${restaurant.wait_time || 15} min</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${zones[0] || 'Downtown'}</span>
+                    </div>
+                    <div class="restaurant-tags">
+                        ${categories.slice(0, 3).map(cat => `<span class="tag">${cat}</span>`).join('')}
+                        ${ambiance.slice(0, 2).map(amb => `<span class="tag">${amb}</span>`).join('')}
+                    </div>
+                    <div class="restaurant-actions">
+                        <button class="btn-primary" onclick="viewRestaurant('${restaurant.restaurant_id || restaurant.id}')">
+                            View Details
+                        </button>
+                        <button class="btn-secondary" onclick="toggleFavorite('${restaurant.restaurant_id || restaurant.id}')">
+                            <i class="fas fa-heart
