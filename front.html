@@ -431,11 +431,7 @@
                         <label for="categoryFilter">Category</label>
                         <select id="categoryFilter">
                             <option value="">All Categories</option>
-                            <option value="italiana">Italian</option>
-                            <option value="mexicana">Mexican</option>
-                            <option value="americana">American</option>
-                            <option value="asiatica">Asian</option>
-                            <option value="vegetariana">Vegetarian</option>
+                            <!-- Categories will be loaded dynamically -->
                         </select>
                     </div>
 
@@ -444,19 +440,51 @@
                         <div class="checkbox-group">
                             <div class="checkbox-item">
                                 <input type="checkbox" id="petFriendly">
-                                <label for="petFriendly">Pet Friendly</label>
+                                <label for="petFriendly">🐕 Pet Friendly</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="kidsGames">
-                                <label for="kidsGames">Kids Games</label>
+                                <label for="kidsGames">🎮 Kids Games</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="accessible">
-                                <label for="accessible">Wheelchair Accessible</label>
+                                <label for="accessible">♿ Wheelchair Accessible</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="promotions">
-                                <label for="promotions">Has Promotions</label>
+                                <label for="promotions">🎯 Has Promotions</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reservations">
+                                <label for="reservations">📅 Accepts Reservations</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="delivery">
+                                <label for="delivery">🚚 Delivery Available</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="takeout">
+                                <label for="takeout">📦 Takeout Available</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="outdoor_seating">
+                                <label for="outdoor_seating">🌿 Outdoor Seating</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="wifi">
+                                <label for="wifi">📶 Free WiFi</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="parking">
+                                <label for="parking">🅿️ Parking Available</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="live_music">
+                                <label for="live_music">🎵 Live Music</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="happy_hour">
+                                <label for="happy_hour">🍹 Happy Hour</label>
                             </div>
                         </div>
                     </div>
@@ -543,10 +571,12 @@
         let currentUser = null;
         let restaurants = [];
         let filteredRestaurants = [];
+        let availableCategories = [];
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
+            loadCategories();
             loadRestaurants();
             setupEventListeners();
         });
@@ -574,6 +604,74 @@
                     event.target.style.display = 'none';
                 }
             });
+        }
+
+        // Load categories dynamically
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/categories`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    availableCategories = data.categories;
+                    populateCategoryFilter();
+                }
+            } catch (error) {
+                console.error('Failed to load categories:', error);
+                // Fallback to default categories
+                availableCategories = ['italiana', 'mexicana', 'americana', 'asiatica', 'vegetariana'];
+                populateCategoryFilter();
+            }
+        }
+
+        function populateCategoryFilter() {
+            const categorySelect = document.getElementById('categoryFilter');
+            
+            // Clear existing options except "All Categories"
+            categorySelect.innerHTML = '<option value="">All Categories</option>';
+            
+            // Add categories with proper formatting
+            availableCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = formatCategoryName(category);
+                categorySelect.appendChild(option);
+            });
+        }
+
+        function formatCategoryName(category) {
+            // Convert category names to proper display format
+            const categoryMap = {
+                'italiana': 'Italian',
+                'mexicana': 'Mexican',
+                'americana': 'American',
+                'asiatica': 'Asian',
+                'vegetariana': 'Vegetarian',
+                'china': 'Chinese',
+                'japonesa': 'Japanese',
+                'tailandesa': 'Thai',
+                'india': 'Indian',
+                'francesa': 'French',
+                'mediterránea': 'Mediterranean',
+                'árabe': 'Middle Eastern',
+                'española': 'Spanish',
+                'griega': 'Greek',
+                'brasileña': 'Brazilian',
+                'peruana': 'Peruvian',
+                'argentina': 'Argentinian',
+                'fusión': 'Fusion',
+                'vegana': 'Vegan',
+                'saludable': 'Healthy',
+                'barbacoa': 'BBQ',
+                'mariscos': 'Seafood',
+                'steakhouse': 'Steakhouse',
+                'comida_rapida': 'Fast Food',
+                'café': 'Cafe',
+                'panadería': 'Bakery',
+                'postres': 'Desserts'
+            };
+            
+            return categoryMap[category] || category.charAt(0).toUpperCase() + category.slice(1);
         }
 
         // Authentication functions
@@ -738,9 +836,17 @@
                         ${restaurant.kids_games ? '<span class="feature-tag">🎮 Kids Games</span>' : ''}
                         ${restaurant.accessible ? '<span class="feature-tag">♿ Accessible</span>' : ''}
                         ${restaurant.promotions ? '<span class="feature-tag">🎯 Promotions</span>' : ''}
+                        ${restaurant.reservations ? '<span class="feature-tag">📅 Reservations</span>' : ''}
+                        ${restaurant.delivery ? '<span class="feature-tag">🚚 Delivery</span>' : ''}
+                        ${restaurant.takeout ? '<span class="feature-tag">📦 Takeout</span>' : ''}
+                        ${restaurant.outdoor_seating ? '<span class="feature-tag">🌿 Outdoor</span>' : ''}
+                        ${restaurant.wifi ? '<span class="feature-tag">📶 WiFi</span>' : ''}
+                        ${restaurant.parking ? '<span class="feature-tag">🅿️ Parking</span>' : ''}
+                        ${restaurant.live_music ? '<span class="feature-tag">🎵 Live Music</span>' : ''}
+                        ${restaurant.happy_hour ? '<span class="feature-tag">🍹 Happy Hour</span>' : ''}
                     </div>
                     <div class="restaurant-categories">
-                        ${restaurant.categories ? restaurant.categories.join(', ') : 'Various cuisines'}
+                        ${restaurant.categories ? restaurant.categories.map(cat => formatCategoryName(cat)).join(', ') : 'Various cuisines'}
                     </div>
                 </div>
             `).join('');
@@ -750,10 +856,22 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const maxBudget = parseInt(document.getElementById('budgetRange').value);
             const category = document.getElementById('categoryFilter').value;
-            const petFriendly = document.getElementById('petFriendly').checked;
-            const kidsGames = document.getElementById('kidsGames').checked;
-            const accessible = document.getElementById('accessible').checked;
-            const promotions = document.getElementById('promotions').checked;
+            
+            // Get all feature filters
+            const featureFilters = {
+                pet_friendly: document.getElementById('petFriendly').checked,
+                kids_games: document.getElementById('kidsGames').checked,
+                accessible: document.getElementById('accessible').checked,
+                promotions: document.getElementById('promotions').checked,
+                reservations: document.getElementById('reservations').checked,
+                delivery: document.getElementById('delivery').checked,
+                takeout: document.getElementById('takeout').checked,
+                outdoor_seating: document.getElementById('outdoor_seating').checked,
+                wifi: document.getElementById('wifi').checked,
+                parking: document.getElementById('parking').checked,
+                live_music: document.getElementById('live_music').checked,
+                happy_hour: document.getElementById('happy_hour').checked
+            };
 
             filteredRestaurants = restaurants.filter(restaurant => {
                 // Search filter
@@ -772,11 +890,12 @@
                     return false;
                 }
 
-                // Feature filters
-                if (petFriendly && !restaurant.pet_friendly) return false;
-                if (kidsGames && !restaurant.kids_games) return false;
-                if (accessible && !restaurant.accessible) return false;
-                if (promotions && !restaurant.promotions) return false;
+                // Feature filters - only check if the filter is enabled
+                for (const [feature, isEnabled] of Object.entries(featureFilters)) {
+                    if (isEnabled && !restaurant[feature]) {
+                        return false;
+                    }
+                }
 
                 return true;
             });
@@ -798,7 +917,7 @@
 
         function showProfile() {
             if (currentUser) {
-                alert(`Profile: ${currentUser.name}\nBudget: $${currentUser.budget}\nAge: ${currentUser.age}`);
+                alert(`Profile: ${currentUser.name}\nBudget: ${currentUser.budget}\nAge: ${currentUser.age}`);
             }
         }
 

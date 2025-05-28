@@ -578,3 +578,37 @@ if __name__ == '__main__':
         logger.error(f"Failed to start application: {e}")
     finally:
         db.close()
+
+
+# Add this route to your existing Flask backend
+@app.route('/categories', methods=['GET'])
+def get_categories():
+    """Get all available restaurant categories"""
+    try:
+        cursor = connection.cursor()
+        
+        # Get all unique categories from the database
+        query = """
+        SELECT DISTINCT category 
+        FROM restaurant_categories rc
+        JOIN categories c ON rc.category_id = c.id
+        ORDER BY category
+        """
+        
+        cursor.execute(query)
+        categories = [row[0] for row in cursor.fetchall()]
+        
+        return jsonify({
+            'status': 'success',
+            'categories': categories
+        })
+        
+    except Exception as e:
+        print(f"Error fetching categories: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': 'Failed to fetch categories'
+        }), 500
+    finally:
+        if cursor:
+            cursor.close()
