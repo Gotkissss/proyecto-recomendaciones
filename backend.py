@@ -66,7 +66,7 @@ def verify_password(password, hashed):
 def generate_jwt_token(user_data):
     payload = {
         'user_id': user_data['id'],
-        'username': user_data['username'],
+        'username': user_data['name'],
         'exp': datetime.utcnow() + timedelta(hours=JWT_EXPIRATION_HOURS),
         'iat': datetime.utcnow()
     }
@@ -140,6 +140,99 @@ def health():
         return jsonify({"status": "healthy"})
     except Exception as e:
         return jsonify({"status": "unhealthy", "error": str(e)})
+
+@app.route('/register', methods=['POST'])
+def register_user():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        name = data.get('name')
+        password = hash_password(data.get('password'))
+        budget = data.get('budget')
+
+        # Check if user exists
+        query = "MATCH (u:User {email: $email}) RETURN u"
+        if db.execute_query(query, {"email": email}):
+            return jsonify({"status": "error", "message": "Email ya registrado"}), 400
+
+        # Create user
+        query = """
+        CREATE (u:User {id: randomUUID(), name: $name, email: $email, password: $password, budget: $budget})
+        RETURN u.id as id, u.name as name, u.email as email, u.budget as budget
+        """
+        user = db.execute_query(query, {"name": name, "email": email, "password": password, "budget": budget})[0]
+        token = generate_jwt_token(user)
+        return jsonify({"status": "success", "user": user, "token": token})
+    except Exception as e:
+        return handle_error(e, "Error al registrar")
+
+@app.route('/login', methods=['POST'])
+def login_user():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        query = "MATCH (u:User {email: $email}) RETURN u"
+        result = db.execute_query(query, {"email": email})
+        if not result:
+            return jsonify({"status": "error", "message": "Usuario no encontrado"}), 404
+
+        user = result[0]['u']
+        if not verify_password(password, user['password']):
+            return jsonify({"status": "error", "message": "Contraseña incorrecta"}), 401
+
+        token = generate_jwt_token(user)
+        user_data = {k: user[k] for k in ['id', 'name', 'email', 'budget']}
+        return jsonify({"status": "success", "user": user_data, "token": token})
+    except Exception as e:
+        return handle_error(e, "Error al iniciar sesión")
+
+@app.route('/comment', methods=['POST'])
+@token_required
+def add_comment():
+    try:
+        data = request.get_json()
+        text = data.get('text')
+        restaurant_id = data.get('restaurant_id')
+        author = request.current_user['username']
+
+        logger.info(f"Comentario recibido: '{text}' para restaurante ID: {restaurant_id} por {author}")
+
+        # Verificar existencia de usuario
+        user_check = db.execute_query("MATCH (u:User {name: $name}) RETURN u", {"name": author})
+        if not user_check:
+            logger.warning(f"Usuario no encontrado: {author}")
+            return jsonify({"status": "error", "message": "Usuario no encontrado"}), 404
+
+        # Verificar existencia de restaurante
+        restaurant_check = db.execute_query("MATCH (r:Restaurant {id: $id}) RETURN r", {"id": restaurant_id})
+        if not restaurant_check:
+            logger.warning(f"Restaurante no encontrado con ID: {restaurant_id}")
+            return jsonify({"status": "error", "message": "Restaurante no encontrado"}), 404
+
+        # Crear comentario
+        query = """
+        MATCH (u:User {name: $author}), (r:Restaurant {id: $restaurant_id})
+        CREATE (c:Comment {id: randomUUID(), text: $text, timestamp: timestamp()})
+        CREATE (u)-[:WROTE]->(c)-[:ABOUT]->(r)
+        RETURN c.text AS text, c.timestamp AS timestamp
+        """
+        comment_result = db.execute_query(query, {
+            "author": author,
+            "restaurant_id": restaurant_id,
+            "text": text
+        })
+
+        return jsonify({"status": "success", "comment": comment_result[0]})
+    except Exception as e:
+        return handle_error(e, "Error al guardar comentario")
+
+
+
+
+
+#-----------------------------------------------------------------------------------------------------#
 
 if __name__ == '__main__':
     try:

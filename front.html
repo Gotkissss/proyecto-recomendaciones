@@ -1459,31 +1459,34 @@
         }
 
         // Load ratings and comments
-        function loadRatingsAndComments() {
-            if (!currentRestaurant) return;
+        async function loadRatingsAndComments() {
+                if (!currentRestaurant) return;
 
-            // Calculate average rating
-            const ratings = currentRestaurant.ratings;
-            let averageText = 'Sin calificaciones';
-            if (ratings.length > 0) {
-                const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
-                averageText = `${average.toFixed(1)}/5 (${ratings.length} calificaciones)`;
+                document.getElementById('averageRating').textContent = 'Calificación local desactivada';
+                try {
+                    const res = await fetch(`http://localhost:5000/comments/${currentRestaurant.id}`);
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        const comments = data.comments;
+                        const commentsSection = document.getElementById('commentsSection');
+                        if (comments.length === 0) {
+                            commentsSection.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No hay comentarios aún. ¡Sé el primero en comentar!</p>';
+                        } else {
+                            commentsSection.innerHTML = comments.map(c => `
+                                <div class="comment">
+                                    <div class="comment-author">${c.author || 'Anónimo'}</div>
+                                    <div class="comment-text">${c.text}</div>
+                                </div>
+                            `).join('');
+                        }
+                    } else {
+                        showError('Error al cargar comentarios');
+                    }
+                } catch (err) {
+                    showError('Error de red al obtener comentarios');
+                }
             }
-            document.getElementById('averageRating').textContent = averageText;
 
-            // Load comments
-            const commentsSection = document.getElementById('commentsSection');
-            if (currentRestaurant.comments.length === 0) {
-                commentsSection.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No hay comentarios aún. ¡Sé el primero en comentar!</p>';
-            } else {
-                commentsSection.innerHTML = currentRestaurant.comments.map(comment => `
-                    <div class="comment">
-                        <div class="comment-author">${comment.author}</div>
-                        <div class="comment-text">${comment.text}</div>
-                    </div>
-                `).join('');
-            }
-        }
 
         // Set rating
         function setRating(rating) {
@@ -1508,27 +1511,39 @@
         }
 
         // Add comment
-        function addComment() {
-            if (!currentUser) {
-                alert('Debes iniciar sesión para comentar');
-                return;
-            }
+        async function addComment() {
+    if (!currentUser) {
+        alert('Debes iniciar sesión para comentar');
+        return;
+    }
 
-            const commentText = document.getElementById('newComment').value.trim();
-            if (!commentText) {
-                alert('Por favor escribe un comentario');
-                return;
-            }
+    const text = document.getElementById('newComment').value.trim();
+    if (!text) {
+        alert('Por favor escribe un comentario');
+        return;
+    }
 
-            const comment = {
-                author: currentUser.name,
-                text: commentText
-            };
-
-            currentRestaurant.comments.push(comment);
+    try {
+        const res = await fetch('http://localhost:5000/comment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify({ text, restaurant_id: currentRestaurant.id })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
             document.getElementById('newComment').value = '';
-            loadRatingsAndComments();
+            await loadRatingsAndComments();  // recarga desde backend
+        } else {
+            showError(data.message);
         }
+    } catch (err) {
+        showError('Error al guardar el comentario');
+    }
+}
+
 
         // Close restaurant modal
         function closeRestaurantModal() {
@@ -1539,52 +1554,61 @@
         }
 
         // Authentication functions
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+        async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
-            // Simple validation (in real app, this would be server-side)
-            const users = JSON.parse(localStorage.getItem('chapinSaborUsers') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('chapinSaborCurrentUser', JSON.stringify(user));
-                updateAuthUI();
-                closeModal('loginModal');
-                showSuccess('¡Bienvenido de vuelta!');
-            } else {
-                showError('Email o contraseña incorrectos');
-            }
+    try {
+        const res = await fetch('http://localhost:5000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            localStorage.setItem('token', data.token);
+            currentUser = data.user;
+            updateAuthUI();
+            closeModal('loginModal');
+            showSuccess('¡Bienvenido de vuelta!');
+        } else {
+            showError(data.message);
         }
+    } catch (err) {
+        showError('Error de red al iniciar sesión');
+    }
+}
 
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const budget = document.getElementById('registerBudget').value;
 
-            // Check if user already exists
-            const users = JSON.parse(localStorage.getItem('chapinSaborUsers') || '[]');
-            if (users.find(u => u.email === email)) {
-                showError('Ya existe un usuario con este email');
-                return;
-            }
+async function handleRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const budget = document.getElementById('registerBudget').value;
 
-            // Create new user
-            const newUser = { name, email, password, budget };
-            users.push(newUser);
-            localStorage.setItem('chapinSaborUsers', JSON.stringify(users));
-
-            // Auto login
-            currentUser = newUser;
-            localStorage.setItem('chapinSaborCurrentUser', JSON.stringify(newUser));
+    try {
+        const res = await fetch('http://localhost:5000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, budget })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            localStorage.setItem('token', data.token);
+            currentUser = data.user;
             updateAuthUI();
             closeModal('registerModal');
             showSuccess('¡Cuenta creada exitosamente!');
+        } else {
+            showError(data.message);
         }
+    } catch (err) {
+        showError('Error de red al registrar');
+    }
+}
+
 
         function handleProfileUpdate(e) {
             e.preventDefault();
@@ -1606,19 +1630,26 @@
         }
 
         function logout() {
+            localStorage.removeItem('token');
             currentUser = null;
-            localStorage.removeItem('chapinSaborCurrentUser');
             updateAuthUI();
             showSuccess('Sesión cerrada exitosamente');
         }
 
+
         function loadUser() {
-            const savedUser = localStorage.getItem('chapinSaborCurrentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                updateAuthUI();
-            }
-        }
+            const token = localStorage.getItem('token');
+            if (!token) return;
+                 try {
+                     // Decodificar JWT para obtener nombre (opcional)
+                     const payload = JSON.parse(atob(token.split('.')[1]));
+                     currentUser = { name: payload.username }; 
+                    updateAuthUI();
+                } catch (e) {
+                     localStorage.removeItem('token');
+                 }
+        }       
+
 
         function updateAuthUI() {
             const guestView = document.getElementById('guestView');
