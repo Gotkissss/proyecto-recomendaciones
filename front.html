@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Finder</title>
+    <title>ChapinEats - Los Mejores Restaurantes de Guatemala</title>
     <style>
         * {
             margin: 0;
@@ -13,9 +13,17 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.02"><circle cx="30" cy="30" r="2"/></g></g></svg>'),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="volcano" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:%23654ea3;stop-opacity:0.1"/><stop offset="50%" style="stop-color:%23eaafc8;stop-opacity:0.05"/><stop offset="100%" style="stop-color:%23654ea3;stop-opacity:0.02"/></linearGradient></defs><polygon points="400,600 600,200 800,600" fill="url(%23volcano)"/><polygon points="200,600 350,300 500,600" fill="url(%23volcano)"/><polygon points="700,600 850,250 1000,600" fill="url(%23volcano)"/></svg>');
+            background-size: auto, auto, 60px 60px, cover;
+            background-attachment: fixed;
             min-height: 100vh;
             color: #333;
+            position: relative;
         }
 
         .container {
@@ -26,12 +34,13 @@
 
         /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
             padding: 20px 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -39,12 +48,13 @@
         }
 
         .logo {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
         }
 
         .auth-buttons {
@@ -61,57 +71,78 @@
 
         .user-name {
             font-weight: 600;
-            color: #667eea;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         /* Buttons */
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: #667eea;
-            border: 2px solid #667eea;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
-            background: #667eea;
-            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
         }
 
         .btn-logout {
-            background: #ff6b6b;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
             color: white;
         }
 
         .btn-logout:hover {
-            background: #ee5a5a;
+            background: linear-gradient(135deg, #ee5a5a, #dd4a4a);
+            transform: translateY(-2px);
         }
 
         /* Main Content */
         .main-content {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 320px 1fr;
             gap: 30px;
             align-items: start;
         }
@@ -124,13 +155,34 @@
 
         /* Sidebar */
         .sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
 
         .filter-section {
@@ -139,9 +191,10 @@
 
         .filter-title {
             font-weight: 700;
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 16px;
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .filter-group {
@@ -152,109 +205,348 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #555;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .filter-group input, .filter-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e1e8ed;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             font-size: 14px;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #fff;
+        }
+
+        .filter-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .filter-group input:focus, .filter-group select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .filter-group select option {
+            background: #2c3e50;
+            color: #fff;
+        }
+
+        .budget-display {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            margin-top: 5px;
         }
 
         .checkbox-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .checkbox-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .checkbox-item input[type="checkbox"] {
             width: auto;
+            accent-color: #ff6b6b;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 14px;
         }
 
         /* Restaurant Grid */
         .restaurants-section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .section-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 25px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .restaurant-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
         }
 
         .restaurant-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 1px solid #f0f0f0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .restaurant-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .restaurant-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .restaurant-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
         }
 
         .restaurant-name {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             color: #333;
         }
 
         .restaurant-price {
             font-size: 16px;
             font-weight: 600;
-            color: #667eea;
-            margin-bottom: 10px;
+            color: #ff6b6b;
+            margin-bottom: 15px;
         }
 
         .restaurant-features {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .feature-tag {
-            background: #f0f4ff;
-            color: #667eea;
-            padding: 4px 8px;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #fff2f2, #ffe8e8);
+            color: #ff6b6b;
+            padding: 6px 10px;
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 500;
+            border: 1px solid rgba(255, 107, 107, 0.2);
         }
 
         .restaurant-categories {
             color: #666;
             font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Restaurant Detail Modal */
+        .restaurant-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .restaurant-modal-content {
+            background: linear-gradient(135deg, #fff 0%, #f8faff 100%);
+            margin: 2% auto;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .restaurant-modal-header {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 30px;
+            border-radius: 24px 24px 0 0;
+            position: relative;
+        }
+
+        .restaurant-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s ease;
+        }
+
+        .restaurant-modal-close:hover {
+            color: white;
+        }
+
+        .restaurant-modal-body {
+            padding: 30px;
+        }
+
+        .restaurant-modal-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-modal-price {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 30px;
+        }
+
+        .modal-section h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f8faff;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .rating-section {
+            background: #f8faff;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            font-size: 20px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .star.active {
+            color: #ffd700;
+        }
+
+        .star:hover {
+            color: #ffd700;
+        }
+
+        .comments-section {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .comment {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            color: #ff6b6b;
+            margin-bottom: 5px;
+        }
+
+        .comment-text {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .add-comment {
+            margin-top: 15px;
+        }
+
+        .add-comment textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .add-comment textarea:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
         }
 
         /* Modals */
@@ -266,38 +558,39 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(5px);
         }
 
         .modal-content {
             background: white;
             margin: 5% auto;
-            padding: 30px;
-            border-radius: 20px;
+            padding: 35px;
+            border-radius: 24px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .modal-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: #333;
         }
 
         .close {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             cursor: pointer;
             color: #aaa;
+            transition: color 0.3s ease;
         }
 
         .close:hover {
@@ -317,27 +610,49 @@
 
         .form-group input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 2px solid #e1e8ed;
             border-radius: 12px;
             font-size: 16px;
+            transition: border-color 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        /* Profile Modal */
+        .profile-info {
+            background: #f8faff;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .budget-info {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff6b6b;
         }
 
         /* Loading and Error States */
         .loading {
             text-align: center;
-            padding: 40px;
-            color: #666;
+            padding: 60px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
         }
 
         .error {
-            background: #fee;
+            background: linear-gradient(135deg, #fee, #fdd);
             color: #c33;
             padding: 15px;
             border-radius: 12px;
@@ -346,7 +661,7 @@
         }
 
         .success {
-            background: #efe;
+            background: linear-gradient(135deg, #efe, #dfd);
             color: #3c3;
             padding: 15px;
             border-radius: 12px;
@@ -357,13 +672,30 @@
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: #666;
+            padding: 80px 20px;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .empty-state h3 {
-            margin-bottom: 10px;
-            color: #333;
+            margin-bottom: 15px;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .restaurant-card {
+            animation: fadeInUp 0.6s ease forwards;
         }
 
         /* Responsive */
@@ -380,11 +712,25 @@
 
             .sidebar {
                 position: static;
+                max-height: none;
             }
 
-            .modal-content {
-                margin: 10% auto;
+            .modal-content, .restaurant-modal-content {
+                margin: 5% auto;
+                padding: 25px;
+                width: 95%;
+            }
+
+            .restaurant-modal-header {
                 padding: 20px;
+            }
+
+            .restaurant-modal-title {
+                font-size: 24px;
+            }
+
+            .main-content {
+                gap: 20px;
             }
         }
     </style>
@@ -393,18 +739,18 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <div class="logo">🍽️ Restaurant Finder</div>
+            <div class="logo">🌮 ChapinEats</div>
             <div class="auth-section">
                 <!-- Guest view -->
                 <div class="auth-buttons" id="guestView">
-                    <button class="btn btn-secondary" onclick="openModal('loginModal')">Login</button>
-                    <button class="btn btn-primary" onclick="openModal('registerModal')">Sign Up</button>
+                    <button class="btn btn-secondary" onclick="openModal('loginModal')">Iniciar Sesión</button>
+                    <button class="btn btn-primary" onclick="openModal('registerModal')">Registrarse</button>
                 </div>
                 <!-- Logged in view -->
                 <div class="user-info" id="loggedInView" style="display: none;">
                     <span class="user-name" id="userName"></span>
-                    <button class="btn btn-secondary" onclick="showProfile()">Profile</button>
-                    <button class="btn btn-logout" onclick="logout()">Logout</button>
+                    <button class="btn btn-secondary" onclick="showProfile()">Perfil</button>
+                    <button class="btn btn-logout" onclick="logout()">Cerrar Sesión</button>
                 </div>
             </div>
         </header>
@@ -414,73 +760,72 @@
             <!-- Sidebar with Filters -->
             <aside class="sidebar">
                 <div class="filter-section">
-                    <h3 class="filter-title">🔍 Search & Filter</h3>
+                    <h3 class="filter-title">🔍 Buscar y Filtrar</h3>
                     
                     <div class="filter-group">
-                        <label for="searchInput">Search Restaurants</label>
-                        <input type="text" id="searchInput" placeholder="Restaurant name or cuisine...">
+                        <label for="searchInput">Buscar Restaurantes</label>
+                        <input type="text" id="searchInput" placeholder="Nombre del restaurante o cocina...">
                     </div>
 
                     <div class="filter-group">
-                        <label for="budgetRange">Max Budget (Q)</label>
-                        <input type="range" id="budgetRange" min="0" max="1000" value="500">
-                        <span id="budgetValue">Q50</span>
+                        <label for="budgetRange">Presupuesto Máximo (Q)</label>
+                        <input type="range" id="budgetRange" min="0" max="1000" value="1000">
+                        <div class="budget-display" id="budgetValue">Sin límite</div>
                     </div>
 
                     <div class="filter-group">
-                        <label for="categoryFilter">Category</label>
+                        <label for="categoryFilter">Categoría</label>
                         <select id="categoryFilter">
-                            <option value="">All Categories</option>
-                            <!-- Categories will be loaded dynamically -->
+                            <option value="">Todas las Categorías</option>
                         </select>
                     </div>
 
                     <div class="filter-group">
-                        <label>Special Features</label>
+                        <label>Características Especiales</label>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
-                                <input type="checkbox" id="petFriendly">
-                                <label for="petFriendly">🐕 Pet Friendly</label>
+                                <input type="checkbox" id="pet_friendly">
+                                <label for="pet_friendly">🐕 Pet Friendly</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="checkbox" id="kidsGames">
-                                <label for="kidsGames">🎮 Kids Games</label>
+                                <input type="checkbox" id="kids_games">
+                                <label for="kids_games">🎮 Juegos para Niños</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="accessible">
-                                <label for="accessible">♿ Wheelchair Accessible</label>
+                                <label for="accessible">♿ Accesible</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="promotions">
-                                <label for="promotions">🎯 Has Promotions</label>
+                                <label for="promotions">🎯 Promociones</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="reservations">
-                                <label for="reservations">📅 Accepts Reservations</label>
+                                <label for="reservations">📅 Acepta Reservas</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="delivery">
-                                <label for="delivery">🚚 Delivery Available</label>
+                                <label for="delivery">🚚 Delivery</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="takeout">
-                                <label for="takeout">📦 Takeout Available</label>
+                                <label for="takeout">📦 Para Llevar</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="outdoor_seating">
-                                <label for="outdoor_seating">🌿 Outdoor Seating</label>
+                                <label for="outdoor_seating">🌿 Terraza</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="wifi">
-                                <label for="wifi">📶 Free WiFi</label>
+                                <label for="wifi">📶 WiFi Gratis</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="parking">
-                                <label for="parking">🅿️ Parking Available</label>
+                                <label for="parking">🅿️ Parqueo</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="live_music">
-                                <label for="live_music">🎵 Live Music</label>
+                                <label for="live_music">🎵 Música en Vivo</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="happy_hour">
@@ -489,17 +834,64 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary" onclick="applyFilters()" style="width: 100%;">Apply Filters</button>
+                    <button class="btn btn-primary" onclick="applyFilters()" style="width: 100%;">Aplicar Filtros</button>
                 </div>
             </aside>
 
             <!-- Restaurant Grid -->
             <main class="restaurants-section">
-                <h2 class="section-title">Discover Amazing Restaurants</h2>
+                <h2 class="section-title">Descubre los Mejores Restaurantes</h2>
                 <div id="restaurantGrid" class="restaurant-grid">
-                    <div class="loading">Loading restaurants...</div>
+                    <div class="loading">Cargando restaurantes...</div>
                 </div>
             </main>
+        </div>
+    </div>
+
+    <!-- Restaurant Detail Modal -->
+    <div id="restaurantModal" class="restaurant-modal">
+        <div class="restaurant-modal-content">
+            <div class="restaurant-modal-header">
+                <span class="restaurant-modal-close" onclick="closeRestaurantModal()">&times;</span>
+                <h2 class="restaurant-modal-title" id="modalRestaurantName"></h2>
+                <div class="restaurant-modal-price" id="modalRestaurantPrice"></div>
+            </div>
+            <div class="restaurant-modal-body">
+                <div class="modal-section">
+                    <h3>🏷️ Categorías</h3>
+                    <div id="modalCategories"></div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>✨ Características</h3>
+                    <div class="modal-features" id="modalFeatures"></div>
+                </div>
+
+                <div class="modal-section">
+                    <div class="rating-section">
+                        <h3>⭐ Calificación y Comentarios</h3>
+                        <div class="rating-display">
+                            <div class="stars" id="restaurantRating">
+                                <span class="star" onclick="setRating(1)">⭐</span>
+                                <span class="star" onclick="setRating(2)">⭐</span>
+                                <span class="star" onclick="setRating(3)">⭐</span>
+                                <span class="star" onclick="setRating(4)">⭐</span>
+                                <span class="star" onclick="setRating(5)">⭐</span>
+                            </div>
+                            <span id="averageRating">Sin calificaciones</span>
+                        </div>
+                        
+                        <div class="comments-section" id="commentsSection">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment" id="addCommentSection" style="display: none;">
+                            <textarea id="newComment" placeholder="Escribe tu comentario sobre este restaurante..."></textarea>
+                            <button class="btn btn-primary" onclick="addComment()" style="margin-top: 10px;">Agregar Comentario</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -507,20 +899,19 @@
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Welcome Back</h2>
+                <h2 class="modal-title">Iniciar Sesión</h2>
                 <span class="close" onclick="closeModal('loginModal')">&times;</span>
             </div>
-            <div id="loginError" class="error" style="display: none;"></div>
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="loginUsername">Username or Email</label>
-                    <input type="text" id="loginUsername" required>
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Password</label>
+                    <label for="loginPassword">Contraseña:</label>
                     <input type="password" id="loginPassword" required>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Iniciar Sesión</button>
             </form>
         </div>
     </div>
@@ -529,171 +920,703 @@
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Join Restaurant Finder</h2>
+                <h2 class="modal-title">Registrarse</h2>
                 <span class="close" onclick="closeModal('registerModal')">&times;</span>
             </div>
-            <div id="registerError" class="error" style="display: none;"></div>
             <form id="registerForm">
                 <div class="form-group">
-                    <label for="regUsername">Username</label>
-                    <input type="text" id="regUsername" required>
+                    <label for="registerName">Nombre:</label>
+                    <input type="text" id="registerName" required>
                 </div>
                 <div class="form-group">
-                    <label for="regEmail">Email</label>
-                    <input type="email" id="regEmail" required>
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" required>
                 </div>
                 <div class="form-group">
-                    <label for="regPassword">Password</label>
-                    <input type="password" id="regPassword" required>
+                    <label for="registerPassword">Contraseña:</label>
+                    <input type="password" id="registerPassword" required>
                 </div>
                 <div class="form-group">
-                    <label for="regName">Full Name</label>
-                    <input type="text" id="regName" required>
+                    <label for="registerBudget">Presupuesto Preferido (Q):</label>
+                    <select id="registerBudget">
+                        <option value="unlimited">Ilimitado</option>
+                        <option value="100">Hasta Q100</option>
+                        <option value="200">Hasta Q200</option>
+                        <option value="300">Hasta Q300</option>
+                        <option value="500">Hasta Q500</option>
+                        <option value="1000">Hasta Q1000</option>
+                    </select>
                 </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Registrarse</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Mi Perfil</h2>
+                <span class="close" onclick="closeModal('profileModal')">&times;</span>
+            </div>
+            <div class="profile-info">
+                <h3 id="profileName"></h3>
+                <div class="budget-info" id="profileBudget"></div>
+            </div>
+            <form id="profileForm">
                 <div class="form-group">
-                    <label for="regAge">Age</label>
-                    <input type="number" id="regAge" min="13" max="120" required>
+                    <label for="profileNewBudget">Cambiar Presupuesto:</label>
+                    <select id="profileNewBudget">
+                        <option value="unlimited">Ilimitado</option>
+                        <option value="100">Hasta Q100</option>
+                        <option value="200">Hasta Q200</option>
+                        <option value="300">Hasta Q300</option>
+                        <option value="500">Hasta Q500</option>
+                        <option value="1000">Hasta Q1000</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label for="regBudget">Budget (Q)</label>
-                    <input type="number" id="regBudget" min="10" max="200" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Actualizar Perfil</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Configuration
-        const API_BASE_URL = 'http://localhost:5000';
-        
-        // Global state
+        // Data storage
         let currentUser = null;
-        let restaurants = [];
-        let filteredRestaurants = [];
-        let availableCategories = [];
+        let currentRestaurant = null;
+        let userRating = 0;
+
+        // Restaurant data with more restaurants
+        const restaurants = [
+            {
+                id: 1,
+                name: "Flor de Lis",
+                categories: ["Francesa", "Fine Dining"],
+                price_range: "Q300-500",
+                image: "🥂",
+                features: {
+                    pet_friendly: false,
+                    kids_games: false,
+                    accessible: true,
+                    promotions: false,
+                    reservations: true,
+                    delivery: false,
+                    takeout: false,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: true,
+                    live_music: false,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 2,
+                name: "Hacienda Real",
+                categories: ["Guatemalteca", "Tradicional"],
+                price_range: "Q150-250",
+                image: "🌽",
+                features: {
+                    pet_friendly: true,
+                    kids_games: true,
+                    accessible: true,
+                    promotions: true,
+                    reservations: true,
+                    delivery: true,
+                    takeout: true,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: true,
+                    live_music: true,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 3,
+                name: "Tacontento",
+                categories: ["Mexicana", "Tacos"],
+                price_range: "Q50-100",
+                image: "🌮",
+                features: {
+                    pet_friendly: true,
+                    kids_games: false,
+                    accessible: true,
+                    promotions: true,
+                    reservations: false,
+                    delivery: true,
+                    takeout: true,
+                    outdoor_seating: false,
+                    wifi: true,
+                    parking: false,
+                    live_music: false,
+                    happy_hour: true
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 4,
+                name: "Sobremesa",
+                categories: ["Italiana", "Pasta"],
+                price_range: "Q120-200",
+                image: "🍝",
+                features: {
+                    pet_friendly: false,
+                    kids_games: true,
+                    accessible: true,
+                    promotions: false,
+                    reservations: true,
+                    delivery: true,
+                    takeout: true,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: true,
+                    live_music: false,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 5,
+                name: "Restaurante Altuna",
+                categories: ["Española", "Mariscos"],
+                price_range: "Q200-350",
+                image: "🥘",
+                features: {
+                    pet_friendly: false,
+                    kids_games: false,
+                    accessible: true,
+                    promotions: false,
+                    reservations: true,
+                    delivery: false,
+                    takeout: false,
+                    outdoor_seating: false,
+                    wifi: true,
+                    parking: true,
+                    live_music: false,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 6,
+                name: "Kacao",
+                categories: ["Guatemalteca", "Contemporánea"],
+                price_range: "Q250-400",
+                image: "🍫",
+                features: {
+                    pet_friendly: false,
+                    kids_games: false,
+                    accessible: true,
+                    promotions: false,
+                    reservations: true,
+                    delivery: false,
+                    takeout: false,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: true,
+                    live_music: false,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 7,
+                name: "Pollo Campero",
+                categories: ["Pollo Frito", "Comida Rápida"],
+                price_range: "Q30-80",
+                image: "🍗",
+                features: {
+                    pet_friendly: false,
+                    kids_games: true,
+                    accessible: true,
+                    promotions: true,
+                    reservations: false,
+                    delivery: true,
+                    takeout: true,
+                    outdoor_seating: false,
+                    wifi: true,
+                    parking: true,
+                    live_music: false,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 8,
+                name: "El Portal del Angel",
+                categories: ["Internacional", "Fusión"],
+                price_range: "Q180-280",
+                image: "👼",
+                features: {
+                    pet_friendly: true,
+                    kids_games: false,
+                    accessible: true,
+                    promotions: false,
+                    reservations: true,
+                    delivery: false,
+                    takeout: true,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: true,
+                    live_music: true,
+                    happy_hour: true
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 9,
+                name: "Diacá",
+                categories: ["Guatemalteca", "Desayunos"],
+                price_range: "Q40-120",
+                image: "🥞",
+                features: {
+                    pet_friendly: true,
+                    kids_games: true,
+                    accessible: true,
+                    promotions: true,
+                    reservations: false,
+                    delivery: true,
+                    takeout: true,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: true,
+                    live_music: false,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 10,
+                name: "La Esquina Asiatica",
+                categories: ["Asiática", "Sushi"],
+                price_range: "Q100-200",
+                image: "🍣",
+                features: {
+                    pet_friendly: false,
+                    kids_games: false,
+                    accessible: true,
+                    promotions: true,
+                    reservations: true,
+                    delivery: true,
+                    takeout: true,
+                    outdoor_seating: false,
+                    wifi: true,
+                    parking: false,
+                    live_music: false,
+                    happy_hour: true
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 11,
+                name: "Café Barista",
+                categories: ["Café", "Postres"],
+                price_range: "Q25-80",
+                image: "☕",
+                features: {
+                    pet_friendly: true,
+                    kids_games: false,
+                    accessible: true,
+                    promotions: true,
+                    reservations: false,
+                    delivery: true,
+                    takeout: true,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: false,
+                    live_music: true,
+                    happy_hour: false
+                },
+                ratings: [],
+                comments: []
+            },
+            {
+                id: 12,
+                name: "La Parrilla del Toro",
+                categories: ["Carnes", "Parrillada"],
+                price_range: "Q200-400",
+                image: "🥩",
+                features: {
+                    pet_friendly: false,
+                    kids_games: true,
+                    accessible: true,
+                    promotions: false,
+                    reservations: true,
+                    delivery: false,
+                    takeout: true,
+                    outdoor_seating: true,
+                    wifi: true,
+                    parking: true,
+                    live_music: true,
+                    happy_hour: true
+                },
+                ratings: [],
+                comments: []
+            }
+        ];
 
         // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthStatus();
+        function init() {
+            loadUser();
             loadCategories();
-            loadRestaurants();
+            displayRestaurants(restaurants);
             setupEventListeners();
-        });
+        }
 
         // Setup event listeners
         function setupEventListeners() {
-            // Budget range slider
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            
+            // Budget range
             const budgetRange = document.getElementById('budgetRange');
-            const budgetValue = document.getElementById('budgetValue');
             budgetRange.addEventListener('input', function() {
-                budgetValue.textContent = `Q${this.value}`;
+                const value = this.value;
+                const display = document.getElementById('budgetValue');
+                if (value == 1000) {
+                    display.textContent = 'Sin límite';
+                } else {
+                    display.textContent = `Q${value}`;
+                }
             });
 
-            // Search input
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', debounce(applyFilters, 300));
+            // Category filter
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
 
-            // Form submissions
+            // Feature checkboxes
+            const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
+
+            // Forms
             document.getElementById('loginForm').addEventListener('submit', handleLogin);
             document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+        }
 
-            // Modal clicks
-            window.addEventListener('click', function(event) {
-                if (event.target.classList.contains('modal')) {
-                    event.target.style.display = 'none';
-                }
+        // Load categories for filter
+        function loadCategories() {
+            const categories = new Set();
+            restaurants.forEach(restaurant => {
+                restaurant.categories.forEach(category => categories.add(category));
+            });
+
+            const categoryFilter = document.getElementById('categoryFilter');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
             });
         }
 
-        // Load categories dynamically
-        async function loadCategories() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/categories`);
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    availableCategories = data.categories;
-                    populateCategoryFilter();
-                }
-            } catch (error) {
-                console.error('Failed to load categories:', error);
-                // Fallback to default categories
-                availableCategories = ['italiana', 'mexicana', 'americana', 'asiatica', 'vegetariana'];
-                populateCategoryFilter();
+        // Display restaurants
+        function displayRestaurants(restaurantsToShow) {
+            const grid = document.getElementById('restaurantGrid');
+            
+            if (restaurantsToShow.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>🔍 No se encontraron restaurantes</h3>
+                        <p>Intenta ajustar tus filtros de búsqueda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = restaurantsToShow.map(restaurant => {
+                const features = Object.keys(restaurant.features)
+                    .filter(key => restaurant.features[key])
+                    .slice(0, 3);
+
+                const featureTags = features.map(feature => {
+                    const labels = {
+                        pet_friendly: '🐕 Pet Friendly',
+                        kids_games: '🎮 Juegos',
+                        accessible: '♿ Accesible',
+                        promotions: '🎯 Promociones',
+                        reservations: '📅 Reservas',
+                        delivery: '🚚 Delivery',
+                        takeout: '📦 Para Llevar',
+                        outdoor_seating: '🌿 Terraza',
+                        wifi: '📶 WiFi',
+                        parking: '🅿️ Parqueo',
+                        live_music: '🎵 Música',
+                        happy_hour: '🍹 Happy Hour'
+                    };
+                    return `<span class="feature-tag">${labels[feature]}</span>`;
+                }).join('');
+
+                return `
+                    <div class="restaurant-card" onclick="showRestaurantDetail(${restaurant.id})">
+                        <div class="restaurant-image">${restaurant.image}</div>
+                        <h3 class="restaurant-name">${restaurant.name}</h3>
+                        <div class="restaurant-price">${restaurant.price_range}</div>
+                        <div class="restaurant-features">${featureTags}</div>
+                        <div class="restaurant-categories">${restaurant.categories.join(' • ')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const maxBudget = parseInt(document.getElementById('budgetRange').value);
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            
+            const selectedFeatures = [];
+            const checkboxes = document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                selectedFeatures.push(checkbox.id);
+            });
+
+            let filtered = restaurants.filter(restaurant => {
+                // Search filter
+                const matchesSearch = !searchTerm || 
+                    restaurant.name.toLowerCase().includes(searchTerm) ||
+                    restaurant.categories.some(cat => cat.toLowerCase().includes(searchTerm));
+
+                // Budget filter
+                const priceRange = restaurant.price_range;
+                const maxPrice = parseInt(priceRange.split('-')[1].replace('Q', ''));
+                const matchesBudget = maxBudget >= 1000 || maxPrice <= maxBudget;
+
+                // Category filter
+                const matchesCategory = !categoryFilter || 
+                    restaurant.categories.includes(categoryFilter);
+
+                // Features filter
+                const matchesFeatures = selectedFeatures.length === 0 ||
+                    selectedFeatures.every(feature => restaurant.features[feature]);
+
+                return matchesSearch && matchesBudget && matchesCategory && matchesFeatures;
+            });
+
+            displayRestaurants(filtered);
+        }
+
+        // Show restaurant detail
+        function showRestaurantDetail(restaurantId) {
+            currentRestaurant = restaurants.find(r => r.id === restaurantId);
+            if (!currentRestaurant) return;
+
+            // Update modal content
+            document.getElementById('modalRestaurantName').textContent = currentRestaurant.name;
+            document.getElementById('modalRestaurantPrice').textContent = currentRestaurant.price_range;
+            document.getElementById('modalCategories').textContent = currentRestaurant.categories.join(' • ');
+
+            // Features
+            const featuresContainer = document.getElementById('modalFeatures');
+            const featureLabels = {
+                pet_friendly: '🐕 Pet Friendly',
+                kids_games: '🎮 Juegos para Niños',
+                accessible: '♿ Accesible',
+                promotions: '🎯 Promociones',
+                reservations: '📅 Acepta Reservas',
+                delivery: '🚚 Delivery',
+                takeout: '📦 Para Llevar',
+                outdoor_seating: '🌿 Terraza',
+                wifi: '📶 WiFi Gratis',
+                parking: '🅿️ Parqueo',
+                live_music: '🎵 Música en Vivo',
+                happy_hour: '🍹 Happy Hour'
+            };
+
+            featuresContainer.innerHTML = Object.keys(currentRestaurant.features)
+                .filter(key => currentRestaurant.features[key])
+                .map(feature => `
+                    <div class="modal-feature-item">
+                        ${featureLabels[feature]}
+                    </div>
+                `).join('');
+
+            // Load ratings and comments
+            loadRatingsAndComments();
+
+            // Show/hide comment section based on login status
+            const addCommentSection = document.getElementById('addCommentSection');
+            if (currentUser) {
+                addCommentSection.style.display = 'block';
+            } else {
+                addCommentSection.style.display = 'none';
+            }
+
+            // Show modal
+            document.getElementById('restaurantModal').style.display = 'block';
+        }
+
+        // Load ratings and comments
+        function loadRatingsAndComments() {
+            if (!currentRestaurant) return;
+
+            // Calculate average rating
+            const ratings = currentRestaurant.ratings;
+            let averageText = 'Sin calificaciones';
+            if (ratings.length > 0) {
+                const average = ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
+                averageText = `${average.toFixed(1)}/5 (${ratings.length} calificaciones)`;
+            }
+            document.getElementById('averageRating').textContent = averageText;
+
+            // Load comments
+            const commentsSection = document.getElementById('commentsSection');
+            if (currentRestaurant.comments.length === 0) {
+                commentsSection.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No hay comentarios aún. ¡Sé el primero en comentar!</p>';
+            } else {
+                commentsSection.innerHTML = currentRestaurant.comments.map(comment => `
+                    <div class="comment">
+                        <div class="comment-author">${comment.author}</div>
+                        <div class="comment-text">${comment.text}</div>
+                    </div>
+                `).join('');
             }
         }
 
-        function populateCategoryFilter() {
-            const categorySelect = document.getElementById('categoryFilter');
-            
-            // Clear existing options except "All Categories"
-            categorySelect.innerHTML = '<option value="">All Categories</option>';
-            
-            // Add categories with proper formatting
-            availableCategories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = formatCategoryName(category);
-                categorySelect.appendChild(option);
+        // Set rating
+        function setRating(rating) {
+            if (!currentUser) {
+                alert('Debes iniciar sesión para calificar restaurantes');
+                return;
+            }
+
+            userRating = rating;
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
             });
+
+            // Save rating
+            currentRestaurant.ratings.push(rating);
+            loadRatingsAndComments();
         }
 
-        function formatCategoryName(category) {
-            // Convert category names to proper display format
-            const categoryMap = {
-                'italiana': 'Italian',
-                'mexicana': 'Mexican',
-                'americana': 'American',
-                'asiatica': 'Asian',
-                'vegetariana': 'Vegetarian',
-                'china': 'Chinese',
-                'japonesa': 'Japanese',
-                'tailandesa': 'Thai',
-                'india': 'Indian',
-                'francesa': 'French',
-                'mediterránea': 'Mediterranean',
-                'árabe': 'Middle Eastern',
-                'española': 'Spanish',
-                'griega': 'Greek',
-                'brasileña': 'Brazilian',
-                'peruana': 'Peruvian',
-                'argentina': 'Argentinian',
-                'fusión': 'Fusion',
-                'vegana': 'Vegan',
-                'saludable': 'Healthy',
-                'barbacoa': 'BBQ',
-                'mariscos': 'Seafood',
-                'steakhouse': 'Steakhouse',
-                'comida_rapida': 'Fast Food',
-                'café': 'Cafe',
-                'panadería': 'Bakery',
-                'postres': 'Desserts'
+        // Add comment
+        function addComment() {
+            if (!currentUser) {
+                alert('Debes iniciar sesión para comentar');
+                return;
+            }
+
+            const commentText = document.getElementById('newComment').value.trim();
+            if (!commentText) {
+                alert('Por favor escribe un comentario');
+                return;
+            }
+
+            const comment = {
+                author: currentUser.name,
+                text: commentText
             };
-            
-            return categoryMap[category] || category.charAt(0).toUpperCase() + category.slice(1);
+
+            currentRestaurant.comments.push(comment);
+            document.getElementById('newComment').value = '';
+            loadRatingsAndComments();
+        }
+
+        // Close restaurant modal
+        function closeRestaurantModal() {
+            document.getElementById('restaurantModal').style.display = 'none';
+            userRating = 0;
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => star.classList.remove('active'));
         }
 
         // Authentication functions
-        function checkAuthStatus() {
-            const token = localStorage.getItem('authToken');
-            if (token) {
-                // Verify token with backend
-                fetch(`${API_BASE_URL}/auth/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        currentUser = data.user;
-                        updateAuthUI();
-                    } else {
-                        localStorage.removeItem('authToken');
-                    }
-                })
-                .catch(error => console.error('Auth check failed:', error));
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Simple validation (in real app, this would be server-side)
+            const users = JSON.parse(localStorage.getItem('chapinSaborUsers') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('chapinSaborCurrentUser', JSON.stringify(user));
+                updateAuthUI();
+                closeModal('loginModal');
+                showSuccess('¡Bienvenido de vuelta!');
+            } else {
+                showError('Email o contraseña incorrectos');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const budget = document.getElementById('registerBudget').value;
+
+            // Check if user already exists
+            const users = JSON.parse(localStorage.getItem('chapinSaborUsers') || '[]');
+            if (users.find(u => u.email === email)) {
+                showError('Ya existe un usuario con este email');
+                return;
+            }
+
+            // Create new user
+            const newUser = { name, email, password, budget };
+            users.push(newUser);
+            localStorage.setItem('chapinSaborUsers', JSON.stringify(users));
+
+            // Auto login
+            currentUser = newUser;
+            localStorage.setItem('chapinSaborCurrentUser', JSON.stringify(newUser));
+            updateAuthUI();
+            closeModal('registerModal');
+            showSuccess('¡Cuenta creada exitosamente!');
+        }
+
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+            const newBudget = document.getElementById('profileNewBudget').value;
+            
+            currentUser.budget = newBudget;
+            
+            // Update in storage
+            const users = JSON.parse(localStorage.getItem('chapinSaborUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('chapinSaborUsers', JSON.stringify(users));
+                localStorage.setItem('chapinSaborCurrentUser', JSON.stringify(currentUser));
+            }
+            
+            closeModal('profileModal');
+            showSuccess('Perfil actualizado exitosamente');
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('chapinSaborCurrentUser');
+            updateAuthUI();
+            showSuccess('Sesión cerrada exitosamente');
+        }
+
+        function loadUser() {
+            const savedUser = localStorage.getItem('chapinSaborCurrentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateAuthUI();
             }
         }
 
@@ -705,202 +1628,22 @@
             if (currentUser) {
                 guestView.style.display = 'none';
                 loggedInView.style.display = 'flex';
-                userName.textContent = currentUser.name || currentUser.username;
+                userName.textContent = currentUser.name;
             } else {
                 guestView.style.display = 'flex';
                 loggedInView.style.display = 'none';
             }
         }
 
-        async function handleLogin(event) {
-            event.preventDefault();
+        function showProfile() {
+            if (!currentUser) return;
             
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const errorDiv = document.getElementById('loginError');
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    localStorage.setItem('authToken', data.token);
-                    currentUser = data.user;
-                    updateAuthUI();
-                    closeModal('loginModal');
-                    showSuccess('Login successful!');
-                    loadRestaurants(); // Reload with personalized data
-                } else {
-                    showError(errorDiv, data.message || 'Login failed');
-                }
-            } catch (error) {
-                showError(errorDiv, 'Network error. Please try again.');
-            }
-        }
-
-        async function handleRegister(event) {
-            event.preventDefault();
+            document.getElementById('profileName').textContent = currentUser.name;
+            const budgetText = currentUser.budget === 'unlimited' ? 'Ilimitado' : `Q${currentUser.budget}`;
+            document.getElementById('profileBudget').textContent = `Presupuesto: ${budgetText}`;
+            document.getElementById('profileNewBudget').value = currentUser.budget;
             
-            const formData = {
-                username: document.getElementById('regUsername').value,
-                email: document.getElementById('regEmail').value,
-                password: document.getElementById('regPassword').value,
-                name: document.getElementById('regName').value,
-                age: parseInt(document.getElementById('regAge').value),
-                budget: parseInt(document.getElementById('regBudget').value)
-            };
-            
-            const errorDiv = document.getElementById('registerError');
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    localStorage.setItem('authToken', data.token);
-                    currentUser = data.user;
-                    updateAuthUI();
-                    closeModal('registerModal');
-                    showSuccess('Account created successfully!');
-                    loadRestaurants();
-                } else {
-                    showError(errorDiv, data.message || 'Registration failed');
-                }
-            } catch (error) {
-                showError(errorDiv, 'Network error. Please try again.');
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('authToken');
-            currentUser = null;
-            updateAuthUI();
-            showSuccess('Logged out successfully!');
-            loadRestaurants(); // Reload without personalized data
-        }
-
-        // Restaurant functions
-        async function loadRestaurants() {
-            const grid = document.getElementById('restaurantGrid');
-            grid.innerHTML = '<div class="loading">Loading restaurants...</div>';
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/restaurants`);
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    restaurants = data.restaurants;
-                    filteredRestaurants = [...restaurants];
-                    displayRestaurants(filteredRestaurants);
-                } else {
-                    grid.innerHTML = '<div class="error">Failed to load restaurants</div>';
-                }
-            } catch (error) {
-                grid.innerHTML = '<div class="error">Network error. Please check your connection.</div>';
-            }
-        }
-
-        function displayRestaurants(restaurantList) {
-            const grid = document.getElementById('restaurantGrid');
-            
-            if (restaurantList.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <h3>No restaurants found</h3>
-                        <p>Try adjusting your filters or search criteria</p>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = restaurantList.map(restaurant => `
-                <div class="restaurant-card">
-                    <div class="restaurant-name">${restaurant.name}</div>
-                    <div class="restaurant-price">Q${restaurant.price} Promedio por persona</div>
-                    <div class="restaurant-features">
-                        ${restaurant.pet_friendly ? '<span class="feature-tag">🐕 Pet Friendly</span>' : ''}
-                        ${restaurant.kids_games ? '<span class="feature-tag">🎮 Kids Games</span>' : ''}
-                        ${restaurant.accessible ? '<span class="feature-tag">♿ Accessible</span>' : ''}
-                        ${restaurant.promotions ? '<span class="feature-tag">🎯 Promotions</span>' : ''}
-                        ${restaurant.reservations ? '<span class="feature-tag">📅 Reservations</span>' : ''}
-                        ${restaurant.delivery ? '<span class="feature-tag">🚚 Delivery</span>' : ''}
-                        ${restaurant.takeout ? '<span class="feature-tag">📦 Takeout</span>' : ''}
-                        ${restaurant.outdoor_seating ? '<span class="feature-tag">🌿 Outdoor</span>' : ''}
-                        ${restaurant.wifi ? '<span class="feature-tag">📶 WiFi</span>' : ''}
-                        ${restaurant.parking ? '<span class="feature-tag">🅿️ Parking</span>' : ''}
-                        ${restaurant.live_music ? '<span class="feature-tag">🎵 Live Music</span>' : ''}
-                        ${restaurant.happy_hour ? '<span class="feature-tag">🍹 Happy Hour</span>' : ''}
-                    </div>
-                    <div class="restaurant-categories">
-                        ${restaurant.categories ? restaurant.categories.map(cat => formatCategoryName(cat)).join(', ') : 'Various cuisines'}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function applyFilters() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const maxBudget = parseInt(document.getElementById('budgetRange').value);
-            const category = document.getElementById('categoryFilter').value;
-            
-            // Get all feature filters
-            const featureFilters = {
-                pet_friendly: document.getElementById('petFriendly').checked,
-                kids_games: document.getElementById('kidsGames').checked,
-                accessible: document.getElementById('accessible').checked,
-                promotions: document.getElementById('promotions').checked,
-                reservations: document.getElementById('reservations').checked,
-                delivery: document.getElementById('delivery').checked,
-                takeout: document.getElementById('takeout').checked,
-                outdoor_seating: document.getElementById('outdoor_seating').checked,
-                wifi: document.getElementById('wifi').checked,
-                parking: document.getElementById('parking').checked,
-                live_music: document.getElementById('live_music').checked,
-                happy_hour: document.getElementById('happy_hour').checked
-            };
-
-            filteredRestaurants = restaurants.filter(restaurant => {
-                // Search filter
-                if (searchTerm && !restaurant.name.toLowerCase().includes(searchTerm) &&
-                    !restaurant.categories?.some(cat => cat.toLowerCase().includes(searchTerm))) {
-                    return false;
-                }
-
-                // Budget filter
-                if (restaurant.price > maxBudget) {
-                    return false;
-                }
-
-                // Category filter
-                if (category && !restaurant.categories?.includes(category)) {
-                    return false;
-                }
-
-                // Feature filters - only check if the filter is enabled
-                for (const [feature, isEnabled] of Object.entries(featureFilters)) {
-                    if (isEnabled && !restaurant[feature]) {
-                        return false;
-                    }
-                }
-
-                return true;
-            });
-
-            displayRestaurants(filteredRestaurants);
+            openModal('profileModal');
         }
 
         // Modal functions
@@ -910,51 +1653,31 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
-            // Clear form errors
-            const errorDiv = document.getElementById(modalId.replace('Modal', 'Error'));
-            if (errorDiv) errorDiv.style.display = 'none';
-        }
-
-        function showProfile() {
-            if (currentUser) {
-                alert(`Profile: ${currentUser.name}\nBudget: ${currentUser.budget}\nAge: ${currentUser.age}`);
-            }
         }
 
         // Utility functions
-        function showError(errorDiv, message) {
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
+        function showError(message) {
+            // You could implement a proper toast notification here
+            alert(message);
         }
 
         function showSuccess(message) {
-            // Create temporary success message
-            const successDiv = document.createElement('div');
-            successDiv.className = 'success';
-            successDiv.textContent = message;
-            successDiv.style.position = 'fixed';
-            successDiv.style.top = '20px';
-            successDiv.style.right = '20px';
-            successDiv.style.zIndex = '1001';
-            
-            document.body.appendChild(successDiv);
-            
-            setTimeout(() => {
-                document.body.removeChild(successDiv);
-            }, 3000);
+            // You could implement a proper toast notification here
+            alert(message);
         }
 
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal, .restaurant-modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
         }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
