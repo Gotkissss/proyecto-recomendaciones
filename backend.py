@@ -122,30 +122,29 @@ def get_all_restaurants():
         RETURN
             r.id as id,
             r.nombre as name,
+            r.zona as zone,
+            r.categorias as categories_csv,
             r.precio_promedio as price,
-            r.ubicacion as location,
-            r.telefono as phone,
-            r.horario as schedule,
-            r.calificacion as rating,
-            r.resenas as reviews,
-            r.web as website,
-            r.instagram as instagram,
-            r.facebook as facebook,
+            r.ambiente as ambiance,
             r.pet_friendly as pet_friendly,
             r.juegos_ninios as kids_games,
             r.accesible as accessible,
             r.promociones as promotions,
             r.acepta_reservas as accepts_reservations,
+            r.metodos_pago as payment_methods,
+            r.opciones_saludables as healthy_options,
+            r.nivel_servicio as service_level,
+            r.capacidad as capacity,
+            r.telefono as phone,
             r.delivery as delivery,
-            r.takeout as takeout,
-            r.terraza as outdoor_seating,
-            r.wifi as wifi,
-            r.parqueo as parking,
-            r.musica_vivo as live_music,
-            r.happy_hour as happy_hour,
+            r.direccion as address,
+            r.horario as schedule,
+            r.calificacion as rating,
+            r.resenas as reviews,
             collect(DISTINCT c.nombre) as categories
         ORDER BY r.nombre
         """
+
         results = db.execute_query(query)
         return jsonify({"status": "success", "restaurants": results})
     except Exception as e:

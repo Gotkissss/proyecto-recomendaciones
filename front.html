@@ -812,26 +812,48 @@
                                 <input type="checkbox" id="takeout">
                                 <label for="takeout">📦 Para Llevar</label>
                             </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="outdoor_seating">
-                                <label for="outdoor_seating">🌿 Terraza</label>
+                            <div class="filter-group">
+                                <label for="zoneFilter">Zona</label>
+                                <select id="zoneFilter">
+                                    <option value="">Todas</option>
+                                </select>
                             </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="wifi">
-                                <label for="wifi">📶 WiFi Gratis</label>
+
+                            <div class="filter-group">
+                                <label for="ambianceFilter">Ambiente</label>
+                                <select id="ambianceFilter">
+                                    <option value="">Todos</option>
+                                </select>
                             </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parking">
-                                <label for="parking">🅿️ Parqueo</label>
+
+                            <div class="filter-group">
+                                <label for="paymentFilter">Métodos de Pago</label>
+                                <select id="paymentFilter">
+                                    <option value="">Todos</option>
+                                </select>
                             </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="live_music">
-                                <label for="live_music">🎵 Música en Vivo</label>
+
+                            <div class="filter-group">
+                                <label for="healthyFilter">Opciones Saludables</label>
+                                <select id="healthyFilter">
+                                    <option value="">Todas</option>
+                                    <option value="sí">Sí</option>
+                                    <option value="no">No</option>
+                                </select>
                             </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="happy_hour">
-                                <label for="happy_hour">🍹 Happy Hour</label>
+
+                            <div class="filter-group">
+                                <label for="serviceLevelFilter">Nivel de Servicio</label>
+                                <select id="serviceLevelFilter">
+                                    <option value="">Todos</option>
+                                </select>
                             </div>
+
+                            <div class="filter-group">
+                                <label for="capacityFilter">Capacidad mínima</label>
+                                <input type="number" id="capacityFilter" min="0" placeholder="Ej: 50">
+                            </div>
+
                         </div>
                     </div>
 
@@ -993,6 +1015,7 @@ async function init() {
     await loadRestaurantsFromBackend();
     loadCategories();
     displayRestaurants(restaurants);
+    populateDynamicFilters(); 
     setupEventListeners();
 }
 
@@ -1002,36 +1025,40 @@ async function init() {
             const data = await res.json();
             if (data.status === 'success') {
                 restaurants = data.restaurants.map(r => ({
-                    id: r.id,
-                    name: r.name,
-                    categories: r.categories,
-                    price_range: `Q${r.price}`,
-                    location: r.location,
-                    phone: r.phone,
-                    schedule: r.schedule,
-                    rating: r.rating,
-                    reviews: r.reviews,
-                    website: r.website,
-                    instagram: r.instagram,
-                    facebook: r.facebook,
-                    image: "🍽️",
-                    features: {
-                        pet_friendly: r.pet_friendly,
-                        kids_games: r.kids_games,
-                        accessible: r.accessible,
-                        promotions: r.promotions,
-                        reservations: r.accepts_reservations,
-                        delivery: r.delivery,
-                        takeout: r.takeout,
-                        outdoor_seating: r.outdoor_seating,
-                        wifi: r.wifi,
-                        parking: r.parking,
-                        live_music: r.live_music,
-                        happy_hour: r.happy_hour
-                    },
-                    ratings: [],
-                    comments: []
-                }));
+                id: r.id,
+                name: r.name,
+                zone: r.zone,
+                categories: r.categories,
+                price_range: `Q${r.price}`,
+                ambiance: r.ambiance,
+                pet_friendly: r.pet_friendly,
+                kids_games: r.kids_games,
+                accessible: r.accessible,
+                promotions: r.promotions,
+                reservations: r.accepts_reservations,
+                payment_methods: r.payment_methods,
+                healthy_options: r.healthy_options,
+                service_level: r.service_level,
+                capacity: r.capacity,
+                phone: r.phone,
+                delivery: r.delivery,
+                address: r.address,
+                schedule: r.schedule,
+                rating: r.rating,
+                reviews: r.reviews,
+                image: "🍽️",
+                features: {
+                    pet_friendly: r.pet_friendly,
+                    kids_games: r.kids_games,
+                    accessible: r.accessible,
+                    promotions: r.promotions,
+                    reservations: r.accepts_reservations,
+                    delivery: r.delivery
+                },
+                ratings: [],
+                comments: []
+            }));
+
 
             } else {
                 showError('Error al cargar restaurantes');
@@ -1059,6 +1086,13 @@ async function init() {
         document.getElementById('loginForm').addEventListener('submit', handleLogin);
         document.getElementById('registerForm').addEventListener('submit', handleRegister);
         document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+        document.getElementById('zoneFilter').addEventListener('change', applyFilters);
+        document.getElementById('ambianceFilter').addEventListener('change', applyFilters);
+        document.getElementById('paymentFilter').addEventListener('change', applyFilters);
+        document.getElementById('healthyFilter').addEventListener('change', applyFilters);
+        document.getElementById('serviceLevelFilter').addEventListener('change', applyFilters);
+        document.getElementById('capacityFilter').addEventListener('input', applyFilters);
+
     }
 
     function loadCategories() {
@@ -1075,6 +1109,36 @@ async function init() {
             categoryFilter.appendChild(option);
         });
     }
+
+    function populateDynamicFilters() {
+        const zones = new Set();
+        const ambiances = new Set();
+        const payments = new Set();
+        const services = new Set();
+
+        restaurants.forEach(r => {
+            if (r.zone) zones.add(r.zone.trim());
+            if (r.ambiance) ambiances.add(r.ambiance.trim());
+            if (r.payment_methods) payments.add(r.payment_methods.trim());
+            if (r.service_level) services.add(r.service_level.trim());
+        });
+
+        const fillSelect = (id, values) => {
+            const select = document.getElementById(id);
+            values.forEach(val => {
+                const opt = document.createElement('option');
+                opt.value = val.toLowerCase();
+                opt.textContent = val;
+                select.appendChild(opt);
+            });
+        };
+
+    fillSelect('zoneFilter', zones);
+    fillSelect('ambianceFilter', ambiances);
+    fillSelect('paymentFilter', payments);
+    fillSelect('serviceLevelFilter', services);
+}
+
 
     function displayRestaurants(restaurantsToShow) {
         const grid = document.getElementById('restaurantGrid');
@@ -1129,6 +1193,13 @@ async function init() {
         const maxBudget = parseInt(document.getElementById('budgetRange').value);
         const categoryFilter = document.getElementById('categoryFilter').value;
 
+        const zone = document.getElementById('zoneFilter').value.toLowerCase();
+        const ambiance = document.getElementById('ambianceFilter').value.toLowerCase();
+        const payment = document.getElementById('paymentFilter').value.toLowerCase();
+        const healthy = document.getElementById('healthyFilter').value;
+        const service = document.getElementById('serviceLevelFilter').value.toLowerCase();
+        const capacity = parseInt(document.getElementById('capacityFilter').value || 0);
+
         const selectedFeatures = [];
         document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked').forEach(cb => {
             selectedFeatures.push(cb.id);
@@ -1145,11 +1216,28 @@ async function init() {
 
             const matchesFeatures = selectedFeatures.every(f => restaurant.features[f]);
 
-            return matchesSearch && matchesBudget && matchesCategory && matchesFeatures;
+            const matchesZone = !zone || (restaurant.zone && restaurant.zone.toLowerCase().includes(zone));
+            const matchesAmbiance = !ambiance || (restaurant.ambiance && restaurant.ambiance.toLowerCase().includes(ambiance));
+            const matchesPayment = !payment || (restaurant.payment_methods && restaurant.payment_methods.toLowerCase().includes(payment));
+            const matchesHealthy = !healthy || (restaurant.healthy_options && restaurant.healthy_options.toLowerCase() === healthy);
+            const matchesService = !service || (restaurant.service_level && restaurant.service_level.toLowerCase().includes(service));
+            const matchesCapacity = !capacity || (restaurant.capacity && parseInt(restaurant.capacity) >= capacity);
+
+            return matchesSearch &&
+                matchesBudget &&
+                matchesCategory &&
+                matchesFeatures &&
+                matchesZone &&
+                matchesAmbiance &&
+                matchesPayment &&
+                matchesHealthy &&
+                matchesService &&
+                matchesCapacity;
         });
 
         displayRestaurants(filtered);
     }
+
 
     
 function showRestaurantDetail(id) {
@@ -1164,11 +1252,35 @@ function showRestaurantDetail(id) {
     const oldExtras = document.querySelectorAll('.modal-section.extra');
     oldExtras.forEach(el => el.remove());
 
-    // Insertar info adicional
+    // Insertar info adicional (zona, ambiente, métodos de pago, etc.)
     const detailExtras = `
         <div class="modal-section extra">
-            <h3>📍 Ubicación</h3>
-            <p>${currentRestaurant.location || 'No disponible'}</p>
+            <h3>📍 Dirección</h3>
+            <p>${currentRestaurant.address || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>📌 Zona</h3>
+            <p>${currentRestaurant.zone || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>🌿 Ambiente</h3>
+            <p>${currentRestaurant.ambiance || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>💳 Métodos de Pago</h3>
+            <p>${currentRestaurant.payment_methods || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>🥗 Opciones Saludables</h3>
+            <p>${currentRestaurant.healthy_options || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>👨‍🍳 Nivel de Servicio</h3>
+            <p>${currentRestaurant.service_level || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>👥 Capacidad</h3>
+            <p>${currentRestaurant.capacity || 'No disponible'}</p>
         </div>
         <div class="modal-section extra">
             <h3>📞 Teléfono</h3>
@@ -1182,17 +1294,10 @@ function showRestaurantDetail(id) {
             <h3>⭐ Calificación</h3>
             <p>${currentRestaurant.rating || 'Sin calificación'} (${currentRestaurant.reviews || 0} reseñas)</p>
         </div>
-        <div class="modal-section extra">
-            <h3>🌐 Enlaces</h3>
-            <p>
-                ${currentRestaurant.website ? `<a href="${currentRestaurant.website}" target="_blank">Sitio Web</a><br>` : ''}
-                ${currentRestaurant.instagram ? `<a href="${currentRestaurant.instagram}" target="_blank">Instagram</a><br>` : ''}
-                ${currentRestaurant.facebook ? `<a href="${currentRestaurant.facebook}" target="_blank">Facebook</a>` : ''}
-            </p>
-        </div>
     `;
     document.getElementById('modalFeatures').insertAdjacentHTML('afterend', detailExtras);
 
+    // ACTUALIZADO: características especiales SÍ disponibles
     const featureLabels = {
         pet_friendly: '🐕 Pet Friendly',
         kids_games: '🎮 Juegos para Niños',
@@ -1200,12 +1305,7 @@ function showRestaurantDetail(id) {
         promotions: '🎯 Promociones',
         reservations: '📅 Acepta Reservas',
         delivery: '🚚 Delivery',
-        takeout: '📦 Para Llevar',
-        outdoor_seating: '🌿 Terraza',
-        wifi: '📶 WiFi Gratis',
-        parking: '🅿️ Parqueo',
-        live_music: '🎵 Música en Vivo',
-        happy_hour: '🍹 Happy Hour'
+        takeout: '📦 Para Llevar'
     };
 
     document.getElementById('modalFeatures').innerHTML = Object.keys(currentRestaurant.features)
@@ -1217,6 +1317,7 @@ function showRestaurantDetail(id) {
     document.getElementById('addCommentSection').style.display = currentUser ? 'block' : 'none';
     document.getElementById('restaurantModal').style.display = 'block';
 }
+
 
 
     async function loadRatingsAndComments() {
