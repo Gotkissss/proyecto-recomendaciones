@@ -204,29 +204,41 @@ def add_comment():
         text = data.get('text')
         restaurant_id = data.get('restaurant_id')
         author = request.current_user['username']
-        logger.info(f"Comentario recibido: '{text}' para restaurante ID: {restaurant_id} por {author}")
-        user_check = db.execute_query("MATCH (u:User {name: $name}) RETURN u", {"name": author})
-        if not user_check:
-            logger.warning(f"Usuario no encontrado: {author}")
-            return jsonify({"status": "error", "message": "Usuario no encontrado"}), 404
-        restaurant_check = db.execute_query("MATCH (r:Restaurant {id: $id}) RETURN r", {"id": restaurant_id})
-        if not restaurant_check:
-            logger.warning(f"Restaurante no encontrado con ID: {restaurant_id}")
-            return jsonify({"status": "error", "message": "Restaurante no encontrado"}), 404
-        query = """
-        MATCH (u:User {name: $author}), (r:Restaurant {id: $restaurant_id})
-        CREATE (c:Comment {id: randomUUID(), text: $text, timestamp: timestamp()})
-        CREATE (u)-[:WROTE]->(c)-[:ABOUT]->(r)
-        RETURN c.text AS text, c.timestamp AS timestamp
-        """
-        comment_result = db.execute_query(query, {
+        timestamp = datetime.utcnow().isoformat()
+
+        line = f"{timestamp} | {author} | Restaurante ID: {restaurant_id} | {text}\n"
+
+        with open("comentarios.txt", "a", encoding="utf-8") as f:
+            f.write(line)
+
+        return jsonify({"status": "success", "comment": {
+            "text": text,
             "author": author,
-            "restaurant_id": restaurant_id,
-            "text": text
-        })
-        return jsonify({"status": "success", "comment": comment_result[0]})
+            "timestamp": timestamp
+        }})
+
     except Exception as e:
         return handle_error(e, "Error al guardar comentario")
+    
+@app.route('/comments/<restaurant_id>', methods=['GET'])
+def get_comments(restaurant_id):
+    try:
+        comments = []
+        if os.path.exists("comentarios.txt"):
+            with open("comentarios.txt", "r", encoding="utf-8") as f:
+                for line in f:
+                    parts = line.strip().split(" | ")
+                    if len(parts) == 4 and f"Restaurante ID: {restaurant_id}" in parts[2]:
+                        comments.append({
+                            "timestamp": parts[0],
+                            "author": parts[1],
+                            "text": parts[3]
+                        })
+        return jsonify({"status": "success", "comments": comments})
+    except Exception as e:
+        return handle_error(e, "Error al leer comentarios")
+
+
 
 
 #-----------------------------------------------------------------------------------------------------#
