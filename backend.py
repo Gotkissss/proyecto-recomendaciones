@@ -283,7 +283,132 @@ def get_restaurant_rating(restaurant_id):
     except Exception as e:
         return handle_error(e, "Error al obtener calificación")
 
+# Agregar estos endpoints al final de tu backend.py, antes del if __name__ == '__main__':
 
+@app.route('/filter-options', methods=['GET'])
+def get_filter_options():
+    """Obtiene todas las opciones únicas para los filtros dinámicos"""
+    try:
+        query = """
+        MATCH (r:Restaurant)
+        RETURN 
+            COLLECT(DISTINCT r.zona) as zones,
+            COLLECT(DISTINCT r.ambiente) as ambiances,
+            COLLECT(DISTINCT r.metodos_pago) as payment_methods,
+            COLLECT(DISTINCT r.opciones_saludables) as healthy_options,
+            COLLECT(DISTINCT r.nivel_servicio) as service_levels
+        """
+        result = db.execute_query(query)
+        
+        if result:
+            data = result[0]
+            # Filtrar valores nulos y vacíos
+            filter_options = {
+                'zones': [z for z in data['zones'] if z and z.strip()],
+                'ambiances': [a for a in data['ambiances'] if a and a.strip()],
+                'payment_methods': [p for p in data['payment_methods'] if p and p.strip()],
+                'healthy_options': [h for h in data['healthy_options'] if h and h.strip()],
+                'service_levels': [s for s in data['service_levels'] if s and s.strip()]
+            }
+            
+            return jsonify({
+                "status": "success", 
+                "filter_options": filter_options
+            })
+        else:
+            return jsonify({
+                "status": "success", 
+                "filter_options": {
+                    'zones': [],
+                    'ambiances': [],
+                    'payment_methods': [],
+                    'healthy_options': [],
+                    'service_levels': []
+                }
+            })
+            
+    except Exception as e:
+        return handle_error(e, "Failed to fetch filter options")
+
+@app.route('/zones', methods=['GET'])
+def get_zones():
+    """Obtiene todas las zonas únicas"""
+    try:
+        query = """
+        MATCH (r:Restaurant)
+        WHERE r.zona IS NOT NULL AND r.zona <> ''
+        RETURN DISTINCT r.zona as zone
+        ORDER BY zone
+        """
+        results = db.execute_query(query)
+        zones = [r['zone'] for r in results if r['zone'] and r['zone'].strip()]
+        return jsonify({"status": "success", "zones": zones})
+    except Exception as e:
+        return handle_error(e, "Failed to fetch zones")
+
+@app.route('/ambiances', methods=['GET'])
+def get_ambiances():
+    """Obtiene todos los ambientes únicos"""
+    try:
+        query = """
+        MATCH (r:Restaurant)
+        WHERE r.ambiente IS NOT NULL AND r.ambiente <> ''
+        RETURN DISTINCT r.ambiente as ambiance
+        ORDER BY ambiance
+        """
+        results = db.execute_query(query)
+        ambiances = [r['ambiance'] for r in results if r['ambiance'] and r['ambiance'].strip()]
+        return jsonify({"status": "success", "ambiances": ambiances})
+    except Exception as e:
+        return handle_error(e, "Failed to fetch ambiances")
+
+@app.route('/payment-methods', methods=['GET'])
+def get_payment_methods():
+    """Obtiene todos los métodos de pago únicos"""
+    try:
+        query = """
+        MATCH (r:Restaurant)
+        WHERE r.metodos_pago IS NOT NULL AND r.metodos_pago <> ''
+        RETURN DISTINCT r.metodos_pago as payment_method
+        ORDER BY payment_method
+        """
+        results = db.execute_query(query)
+        payment_methods = [r['payment_method'] for r in results if r['payment_method'] and r['payment_method'].strip()]
+        return jsonify({"status": "success", "payment_methods": payment_methods})
+    except Exception as e:
+        return handle_error(e, "Failed to fetch payment methods")
+
+@app.route('/healthy-options', methods=['GET'])
+def get_healthy_options():
+    """Obtiene todas las opciones saludables únicas"""
+    try:
+        query = """
+        MATCH (r:Restaurant)
+        WHERE r.opciones_saludables IS NOT NULL AND r.opciones_saludables <> ''
+        RETURN DISTINCT r.opciones_saludables as healthy_option
+        ORDER BY healthy_option
+        """
+        results = db.execute_query(query)
+        healthy_options = [r['healthy_option'] for r in results if r['healthy_option'] and r['healthy_option'].strip()]
+        return jsonify({"status": "success", "healthy_options": healthy_options})
+    except Exception as e:
+        return handle_error(e, "Failed to fetch healthy options")
+
+@app.route('/service-levels', methods=['GET'])
+def get_service_levels():
+    """Obtiene todos los niveles de servicio únicos"""
+    try:
+        query = """
+        MATCH (r:Restaurant)
+        WHERE r.nivel_servicio IS NOT NULL AND r.nivel_servicio <> ''
+        RETURN DISTINCT r.nivel_servicio as service_level
+        ORDER BY service_level
+        """
+        results = db.execute_query(query)
+        service_levels = [r['service_level'] for r in results if r['service_level'] and r['service_level'].strip()]
+        return jsonify({"status": "success", "service_levels": service_levels})
+    except Exception as e:
+        return handle_error(e, "Failed to fetch service levels")
 
 
 #-----------------------------------------------------------------------------------------------------#

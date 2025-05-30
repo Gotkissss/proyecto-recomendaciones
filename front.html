@@ -16,8 +16,7 @@
             background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
             background-image: 
                 radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
-                "/><polygon points="200,600 350,300 500,600" fill="url(%23volcano)"/><polygon points="700,600 850,250 1000,600" fill="url(%23volcano)"/></svg>');
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
             background-size: auto, auto, 60px 60px, cover;
             background-attachment: fixed;
             min-height: 100vh;
@@ -1013,9 +1012,9 @@
 async function init() {
     loadUser();
     await loadRestaurantsFromBackend();
-    loadCategories();
+    await loadCategories();
+    await loadDynamicFilters(); 
     displayRestaurants(restaurants);
-    populateDynamicFilters(); 
     setupEventListeners();
 }
 
@@ -1095,49 +1094,79 @@ async function init() {
 
     }
 
-    function loadCategories() {
-        const categories = new Set();
-        restaurants.forEach(restaurant => {
-            restaurant.categories.forEach(category => categories.add(category));
-        });
+    async function loadCategories() {
+        try {
+            const res = await fetch('http://localhost:5000/categories');
+            const data = await res.json();
+            
+            if (data.status === 'success') {
+                const categoryFilter = document.getElementById('categoryFilter');
+                data.categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilter.appendChild(option);
+                });
+            } else {
+                console.error('Error al cargar categorías:', data.message);
+            }
+        } catch (error) {
+            console.error('Error de red al cargar categorías:', error);
+            // Fallback: extraer categorías de los restaurantes cargados
+            const categories = new Set();
+            restaurants.forEach(restaurant => {
+                if (restaurant.categories && Array.isArray(restaurant.categories)) {
+                    restaurant.categories.forEach(category => categories.add(category));
+                }
+            });
 
-        const categoryFilter = document.getElementById('categoryFilter');
-        categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categoryFilter.appendChild(option);
-        });
+            const categoryFilter = document.getElementById('categoryFilter');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+        }
     }
 
-    function populateDynamicFilters() {
-        const zones = new Set();
-        const ambiances = new Set();
-        const payments = new Set();
-        const services = new Set();
-
-        restaurants.forEach(r => {
-            if (r.zone) zones.add(r.zone.trim());
-            if (r.ambiance) ambiances.add(r.ambiance.trim());
-            if (r.payment_methods) payments.add(r.payment_methods.trim());
-            if (r.service_level) services.add(r.service_level.trim());
-        });
-
-        const fillSelect = (id, values) => {
-            const select = document.getElementById(id);
-            values.forEach(val => {
-                const opt = document.createElement('option');
-                opt.value = val.toLowerCase();
-                opt.textContent = val;
-                select.appendChild(opt);
-            });
-        };
-
-    fillSelect('zoneFilter', zones);
-    fillSelect('ambianceFilter', ambiances);
-    fillSelect('paymentFilter', payments);
-    fillSelect('serviceLevelFilter', services);
-}
+    // 2. REEMPLAZAR la función populateDynamicFilters() existente con esta:
+    async function populateDynamicFilters() {
+        try {
+            // Usar el endpoint combinado (más eficiente)
+            const res = await fetch('http://localhost:5000/filter-options');
+            const data = await res.json();
+            
+            if (data.status === 'success') {
+                const options = data.filter_options;
+                
+                fillSelectWithOptions('zoneFilter', options.zones);
+                fillSelectWithOptions('ambianceFilter', options.ambiances);
+                fillSelectWithOptions('paymentFilter', options.payment_methods);
+                fillSelectWithOptions('serviceLevelFilter', options.service_levels);
+                
+                // Para opciones saludables, agregar las opciones específicas
+                const healthyFilter = document.getElementById('healthyFilter');
+                // Limpiar opciones existentes excepto la primera
+                while (healthyFilter.children.length > 1) {
+                    healthyFilter.removeChild(healthyFilter.lastChild);
+                }
+                
+                // Agregar opciones únicas de la base de datos
+                options.healthy_options.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.toLowerCase();
+                    opt.textContent = option;
+                    healthyFilter.appendChild(opt);
+                });
+            }
+        } catch (error) {
+            console.error('Error al cargar filtros dinámicos:', error);
+            
+            // Fallback: extraer de los datos ya cargados
+            loadDynamicFiltersFromLoadedData();
+        }
+    }
 
 
     function displayRestaurants(restaurantsToShow) {
@@ -1570,6 +1599,60 @@ function showRestaurantDetail(id) {
             if (e.target === modal) {
                 modal.style.display = 'none';
             }
+        });
+    }
+
+    function fillSelectWithOptions(selectId, options) {
+        const select = document.getElementById(selectId);
+        
+        // Limpiar opciones existentes excepto la primera ("Todas" o similar)
+        while (select.children.length > 1) {
+            select.removeChild(select.lastChild);
+        }
+        
+        // Agregar nuevas opciones
+        options.forEach(option => {
+            if (option && option.trim()) {
+                const opt = document.createElement('option');
+                opt.value = option.toLowerCase();
+                opt.textContent = option;
+                select.appendChild(opt);
+            }
+        });
+    }
+
+    function loadDynamicFiltersFromLoadedData() {
+        // Fallback function que extrae los filtros de los restaurantes ya cargados
+        const zones = new Set();
+        const ambiances = new Set();
+        const payments = new Set();
+        const services = new Set();
+        const healthyOptions = new Set();
+
+        restaurants.forEach(r => {
+            if (r.zone && r.zone.trim()) zones.add(r.zone.trim());
+            if (r.ambiance && r.ambiance.trim()) ambiances.add(r.ambiance.trim());
+            if (r.payment_methods && r.payment_methods.trim()) payments.add(r.payment_methods.trim());
+            if (r.service_level && r.service_level.trim()) services.add(r.service_level.trim());
+            if (r.healthy_options && r.healthy_options.trim()) healthyOptions.add(r.healthy_options.trim());
+        });
+
+        fillSelectWithOptions('zoneFilter', Array.from(zones));
+        fillSelectWithOptions('ambianceFilter', Array.from(ambiances));
+        fillSelectWithOptions('paymentFilter', Array.from(payments));
+        fillSelectWithOptions('serviceLevelFilter', Array.from(services));
+        
+        // Para opciones saludables
+        const healthyFilter = document.getElementById('healthyFilter');
+        while (healthyFilter.children.length > 1) {
+            healthyFilter.removeChild(healthyFilter.lastChild);
+        }
+        
+        Array.from(healthyOptions).forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.toLowerCase();
+            opt.textContent = option;
+            healthyFilter.appendChild(opt);
         });
     }
 
