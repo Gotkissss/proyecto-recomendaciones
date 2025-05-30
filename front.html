@@ -987,13 +987,14 @@
     let userRating = 0;
     let restaurants = [];
 
-    async function init() {
-        loadUser();
-        await loadRestaurantsFromBackend();
-        loadCategories();
-        displayRestaurants(restaurants);
-        setupEventListeners();
-    }
+    
+async function init() {
+    loadUser();
+    await loadRestaurantsFromBackend();
+    loadCategories();
+    displayRestaurants(restaurants);
+    setupEventListeners();
+}
 
     async function loadRestaurantsFromBackend() {
         try {
@@ -1141,39 +1142,73 @@
         displayRestaurants(filtered);
     }
 
-    function showRestaurantDetail(id) {
-        currentRestaurant = restaurants.find(r => r.id === id);
-        if (!currentRestaurant) return;
+    
+function showRestaurantDetail(id) {
+    currentRestaurant = restaurants.find(r => r.id === id);
+    if (!currentRestaurant) return;
 
-        document.getElementById('modalRestaurantName').textContent = currentRestaurant.name;
-        document.getElementById('modalRestaurantPrice').textContent = currentRestaurant.price_range;
-        document.getElementById('modalCategories').textContent = currentRestaurant.categories.join(' • ');
+    document.getElementById('modalRestaurantName').textContent = currentRestaurant.name;
+    document.getElementById('modalRestaurantPrice').textContent = currentRestaurant.price_range;
+    document.getElementById('modalCategories').textContent = currentRestaurant.categories.join(' • ');
 
-        const featureLabels = {
-            pet_friendly: '🐕 Pet Friendly',
-            kids_games: '🎮 Juegos para Niños',
-            accessible: '♿ Accesible',
-            promotions: '🎯 Promociones',
-            reservations: '📅 Acepta Reservas',
-            delivery: '🚚 Delivery',
-            takeout: '📦 Para Llevar',
-            outdoor_seating: '🌿 Terraza',
-            wifi: '📶 WiFi Gratis',
-            parking: '🅿️ Parqueo',
-            live_music: '🎵 Música en Vivo',
-            happy_hour: '🍹 Happy Hour'
-        };
+    // Limpiar secciones anteriores
+    const oldExtras = document.querySelectorAll('.modal-section.extra');
+    oldExtras.forEach(el => el.remove());
 
-        document.getElementById('modalFeatures').innerHTML = Object.keys(currentRestaurant.features)
-            .filter(k => currentRestaurant.features[k])
-            .map(f => `<div class="modal-feature-item">${featureLabels[f]}</div>`)
-            .join('');
+    // Insertar info adicional
+    const detailExtras = `
+        <div class="modal-section extra">
+            <h3>📍 Ubicación</h3>
+            <p>${currentRestaurant.location || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>📞 Teléfono</h3>
+            <p>${currentRestaurant.phone || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>🕒 Horarios</h3>
+            <p>${currentRestaurant.schedule || 'No disponible'}</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>⭐ Calificación</h3>
+            <p>${currentRestaurant.rating || 'Sin calificación'} (${currentRestaurant.reviews || 0} reseñas)</p>
+        </div>
+        <div class="modal-section extra">
+            <h3>🌐 Enlaces</h3>
+            <p>
+                ${currentRestaurant.website ? `<a href="${currentRestaurant.website}" target="_blank">Sitio Web</a><br>` : ''}
+                ${currentRestaurant.instagram ? `<a href="${currentRestaurant.instagram}" target="_blank">Instagram</a><br>` : ''}
+                ${currentRestaurant.facebook ? `<a href="${currentRestaurant.facebook}" target="_blank">Facebook</a>` : ''}
+            </p>
+        </div>
+    `;
+    document.getElementById('modalFeatures').insertAdjacentHTML('afterend', detailExtras);
 
-        loadRatingsAndComments();
+    const featureLabels = {
+        pet_friendly: '🐕 Pet Friendly',
+        kids_games: '🎮 Juegos para Niños',
+        accessible: '♿ Accesible',
+        promotions: '🎯 Promociones',
+        reservations: '📅 Acepta Reservas',
+        delivery: '🚚 Delivery',
+        takeout: '📦 Para Llevar',
+        outdoor_seating: '🌿 Terraza',
+        wifi: '📶 WiFi Gratis',
+        parking: '🅿️ Parqueo',
+        live_music: '🎵 Música en Vivo',
+        happy_hour: '🍹 Happy Hour'
+    };
 
-        document.getElementById('addCommentSection').style.display = currentUser ? 'block' : 'none';
-        document.getElementById('restaurantModal').style.display = 'block';
-    }
+    document.getElementById('modalFeatures').innerHTML = Object.keys(currentRestaurant.features)
+        .filter(k => currentRestaurant.features[k])
+        .map(f => `<div class="modal-feature-item">${featureLabels[f]}</div>`)
+        .join('');
+
+    loadRatingsAndComments();
+    document.getElementById('addCommentSection').style.display = currentUser ? 'block' : 'none';
+    document.getElementById('restaurantModal').style.display = 'block';
+}
+
 
     async function loadRatingsAndComments() {
         if (!currentRestaurant) return;

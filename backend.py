@@ -27,7 +27,7 @@ JWT_SECRET = os.getenv("JWT_SECRET", "your-jwt-secret")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 
-# Neo4j
+# Neo4j connection
 class Neo4jConnection:
     def __init__(self):
         self.uri = os.getenv("NEO4J_URI")
@@ -86,13 +86,11 @@ def token_required(f):
         token = request.headers.get('Authorization')
         if not token:
             return jsonify({'status': 'error', 'message': 'Token is missing'}), 401
-
         if token.startswith('Bearer '):
             token = token[7:]
         payload = verify_jwt_token(token)
         if not payload:
             return jsonify({'status': 'error', 'message': 'Token is invalid or expired'}), 401
-
         request.current_user = payload
         return f(*args, **kwargs)
     return decorated
@@ -121,11 +119,28 @@ def get_all_restaurants():
         query = """
         MATCH (r:Restaurant)
         OPTIONAL MATCH (r)-[:HAS_CATEGORY]->(c:Category)
-        RETURN r.id as id, r.nombre as name, r.precio_promedio as price,
-               r.pet_friendly as pet_friendly, r.juegos_niños as kids_games,
-               r.accesible as accessible, r.promociones as promotions,
-               r.acepta_reservas as accepts_reservations,
-               collect(DISTINCT c.nombre) as categories
+        RETURN
+            r.id as id,
+            r.nombre as name,
+            r.precio_promedio as price,
+            r.ubicacion as location,
+            r.telefono as phone,
+            r.horario as schedule,
+            r.calificacion as rating,
+            r.resenas as reviews,
+            r.web as website,
+            r.instagram as instagram,
+            r.facebook as facebook,
+            r.pet_friendly as pet_friendly,
+            r.juegos_ninios as kids_games,
+            r.accesible as accessible,
+            r.promociones as promotions,
+            r.acepta_reservas as accepts_reservations,
+            r.delivery as delivery,
+            r.takeout as takeout,
+            r.terraza as outdoor_seating,
+            r.wifi as wifi,
+            collect(DISTINCT c.nombre) as categories
         ORDER BY r.nombre
         """
         results = db.execute_query(query)
@@ -149,13 +164,9 @@ def register_user():
         name = data.get('name')
         password = hash_password(data.get('password'))
         budget = data.get('budget')
-
-        # Check if user exists
         query = "MATCH (u:User {email: $email}) RETURN u"
         if db.execute_query(query, {"email": email}):
             return jsonify({"status": "error", "message": "Email ya registrado"}), 400
-
-        # Create user
         query = """
         CREATE (u:User {id: randomUUID(), name: $name, email: $email, password: $password, budget: $budget})
         RETURN u.id as id, u.name as name, u.email as email, u.budget as budget
@@ -172,16 +183,13 @@ def login_user():
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
-
         query = "MATCH (u:User {email: $email}) RETURN u"
         result = db.execute_query(query, {"email": email})
         if not result:
             return jsonify({"status": "error", "message": "Usuario no encontrado"}), 404
-
         user = result[0]['u']
         if not verify_password(password, user['password']):
             return jsonify({"status": "error", "message": "Contraseña incorrecta"}), 401
-
         token = generate_jwt_token(user)
         user_data = {k: user[k] for k in ['id', 'name', 'email', 'budget']}
         return jsonify({"status": "success", "user": user_data, "token": token})
@@ -196,22 +204,15 @@ def add_comment():
         text = data.get('text')
         restaurant_id = data.get('restaurant_id')
         author = request.current_user['username']
-
         logger.info(f"Comentario recibido: '{text}' para restaurante ID: {restaurant_id} por {author}")
-
-        # Verificar existencia de usuario
         user_check = db.execute_query("MATCH (u:User {name: $name}) RETURN u", {"name": author})
         if not user_check:
             logger.warning(f"Usuario no encontrado: {author}")
             return jsonify({"status": "error", "message": "Usuario no encontrado"}), 404
-
-        # Verificar existencia de restaurante
         restaurant_check = db.execute_query("MATCH (r:Restaurant {id: $id}) RETURN r", {"id": restaurant_id})
         if not restaurant_check:
             logger.warning(f"Restaurante no encontrado con ID: {restaurant_id}")
             return jsonify({"status": "error", "message": "Restaurante no encontrado"}), 404
-
-        # Crear comentario
         query = """
         MATCH (u:User {name: $author}), (r:Restaurant {id: $restaurant_id})
         CREATE (c:Comment {id: randomUUID(), text: $text, timestamp: timestamp()})
@@ -223,17 +224,12 @@ def add_comment():
             "restaurant_id": restaurant_id,
             "text": text
         })
-
         return jsonify({"status": "success", "comment": comment_result[0]})
     except Exception as e:
         return handle_error(e, "Error al guardar comentario")
 
 
-
-
-
 #-----------------------------------------------------------------------------------------------------#
-
 if __name__ == '__main__':
     try:
         db.connect()
