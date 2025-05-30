@@ -1006,6 +1006,14 @@ async function init() {
                     name: r.name,
                     categories: r.categories,
                     price_range: `Q${r.price}`,
+                    location: r.location,
+                    phone: r.phone,
+                    schedule: r.schedule,
+                    rating: r.rating,
+                    reviews: r.reviews,
+                    website: r.website,
+                    instagram: r.instagram,
+                    facebook: r.facebook,
                     image: "🍽️",
                     features: {
                         pet_friendly: r.pet_friendly,
@@ -1013,17 +1021,18 @@ async function init() {
                         accessible: r.accessible,
                         promotions: r.promotions,
                         reservations: r.accepts_reservations,
-                        delivery: false,
-                        takeout: false,
-                        outdoor_seating: false,
-                        wifi: false,
-                        parking: false,
-                        live_music: false,
-                        happy_hour: false
+                        delivery: r.delivery,
+                        takeout: r.takeout,
+                        outdoor_seating: r.outdoor_seating,
+                        wifi: r.wifi,
+                        parking: r.parking,
+                        live_music: r.live_music,
+                        happy_hour: r.happy_hour
                     },
                     ratings: [],
                     comments: []
                 }));
+
             } else {
                 showError('Error al cargar restaurantes');
             }
