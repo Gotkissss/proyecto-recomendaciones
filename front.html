@@ -1222,10 +1222,12 @@ function showRestaurantDetail(id) {
     async function loadRatingsAndComments() {
         if (!currentRestaurant) return;
 
+        const commentsSection = document.getElementById('commentsSection');
+
+        // 1. Obtener comentarios
         try {
             const res = await fetch(`http://localhost:5000/comments/${currentRestaurant.id}`);
             const data = await res.json();
-            const commentsSection = document.getElementById('commentsSection');
 
             if (data.status === 'success') {
                 const comments = data.comments;
@@ -1245,7 +1247,32 @@ function showRestaurantDetail(id) {
         } catch {
             showError('No se pudieron obtener los comentarios');
         }
+
+        // 2. Obtener calificación promedio y cantidad
+        try {
+            const res = await fetch(`http://localhost:5000/rating/${currentRestaurant.id}`);
+            const data = await res.json();
+
+            if (data.status === 'success') {
+                const avg = data.average || 0;
+                const rounded = Math.round(avg);
+                const total = data.total || 0;
+
+                const stars = document.getElementById('restaurantRating');
+                stars.querySelectorAll('.star').forEach((star, i) => {
+                    star.classList.toggle('active', i < rounded);
+                });
+
+                const ratingDisplay = document.getElementById('averageRating');
+                ratingDisplay.textContent = total > 0
+                    ? `${avg} (${total} reseñas)`
+                    : 'Sin calificaciones';
+            }
+        } catch {
+            showError('Error al obtener calificación');
+        }
     }
+
 
     async function addComment() {
         if (!currentUser || !currentRestaurant) return;
@@ -1280,17 +1307,35 @@ function showRestaurantDetail(id) {
         }
     }
 
-    function setRating(rating) {
-        if (!currentUser) {
+    async function setRating(rating) {
+        if (!currentUser || !currentRestaurant) {
             alert('Inicia sesión para calificar');
             return;
         }
 
-        userRating = rating;
-        document.querySelectorAll('.star').forEach((star, i) => {
-            star.classList.toggle('active', i < rating);
-        });
+        try {
+            const res = await fetch('http://localhost:5000/rate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    restaurant_id: currentRestaurant.id,
+                    score: rating
+                })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                await loadRatingsAndComments(); // recarga promedio y comentarios
+            } else {
+                showError(data.message);
+            }
+        } catch {
+            showError('Error al enviar calificación');
+        }
     }
+
 
     function closeRestaurantModal() {
         document.getElementById('restaurantModal').style.display = 'none';

@@ -24,3 +24,78 @@ R22,Sushi Itto,zona 11,japonesa,moderno,FALSE,FALSE,TRUE,TRUE,TRUE,180,tarjeta,T
 R23,La Parrilla Chapina,zona 13,guatemalteca;carnes,tradicional,FALSE,TRUE,TRUE,FALSE,TRUE,150,efectivo;tarjeta,TRUE,4,70,2456-7892,11:00-21:00,FALSE,22 Calle 9-18 Zona 13
 R24,Healthy Corner,zona 15,vegetariana;fusión,saludable,TRUE,FALSE,TRUE,FALSE,TRUE,110,tarjeta,TRUE,4,30,2567-8903,8:00-19:00,TRUE,2 Calle 18-35 Zona 15
 R25,Panadería Americana,zona 9,postres;americana,casual,FALSE,TRUE,TRUE,TRUE,FALSE,45,efectivo,FALSE,3,40,2678-9014,6:00-20:00,FALSE,13 Avenida 8-20 Zona 9
+R26,McDonald's Pradera,zona 10,comida rápida;americana,familiar,FALSE,TRUE,TRUE,TRUE,FALSE,55,efectivo;tarjeta,FALSE,3,120,2234-5700,6:00-24:00,TRUE,Boulevard Los Próceres Zona 10
+R27,KFC Metrocentro,zona 11,comida rápida,familiar,FALSE,TRUE,TRUE,TRUE,FALSE,45,efectivo;tarjeta,FALSE,3,80,2345-6800,10:00-22:00,TRUE,Centro Comercial Metrocentro Zona 11
+R28,Subway Cayalá,zona 16,comida rápida;americana,casual,FALSE,FALSE,TRUE,TRUE,FALSE,40,efectivo;tarjeta,TRUE,3,25,2456-7900,7:00-22:00,TRUE,Cayalá Centro Comercial Zona 16
+R29,Pizza Hut Oakland,zona 10,italiana;americana,familiar,FALSE,TRUE,TRUE,TRUE,FALSE,90,efectivo;tarjeta,TRUE,3,60,2567-8000,11:00-23:00,TRUE,Oakland Mall Zona 10
+R30,Domino's Pizza Zona 14,zona 14,italiana;americana,casual,FALSE,FALSE,TRUE,TRUE,FALSE,85,efectivo;tarjeta,TRUE,3,40,2678-9100,10:00-24:00,TRUE,14 Calle 20-25 Zona 14
+R31,El Portal del Angel,zona 1,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,65,efectivo,TRUE,3,90,2789-0200,6:00-15:00,FALSE,Portal del Comercio Zona 1
+R32,Restaurante Altuna,zona 9,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,120,efectivo;tarjeta,TRUE,4,50,2890-1300,12:00-21:00,FALSE,5a Avenida 12-31 Zona 9
+R33,Los Cebollines,zona 10,guatemalteca,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,95,efectivo;tarjeta,TRUE,3,110,2901-2400,11:00-22:00,TRUE,18 Calle 4-32 Zona 10
+R34,Rincón Típico,zona 4,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,70,efectivo,TRUE,3,60,2012-3500,7:00-16:00,FALSE,11a Avenida 8-45 Zona 4
+R35,La Fonda de la Calle Real,zona 1,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,55,efectivo,TRUE,3,80,2123-4600,6:00-18:00,FALSE,5a Calle 8-42 Zona 1
+R36,Hacienda Los Sanchez,zona 13,guatemalteca;carnes,tradicional,FALSE,TRUE,TRUE,FALSE,TRUE,130,efectivo;tarjeta,TRUE,4,85,2234-5800,12:00-21:00,FALSE,23 Calle 15-30 Zona 13
+R37,El Patio de la Abuela,zona 15,guatemalteca,acogedor,TRUE,FALSE,TRUE,FALSE,FALSE,80,efectivo;tarjeta,TRUE,3,45,2345-6900,8:00-20:00,FALSE,8a Avenida 22-15 Zona 15
+R38,Casa Chapina,zona 12,guatemalteca,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,75,efectivo;tarjeta,TRUE,3,70,2456-7000,10:00-21:00,FALSE,15 Calle 6-28 Zona 12
+R39,Doña María Tradiciones,zona 7,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,60,efectivo,TRUE,3,55,2567-8100,7:00-17:00,FALSE,21 Avenida 18-12 Zona 7
+R40,Kacao,zona 4,guatemalteca gourmet,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,320,tarjeta,TRUE,5,35,2678-9200,19:00-24:00,FALSE,2a Avenida 14-25 Zona 4
+R41,Restaurante Welchez,zona 1,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,85,efectivo;tarjeta,TRUE,4,65,2789-0300,11:00-20:00,FALSE,14 Calle 6-35 Zona 1
+R42,El Sabor Chapín,zona 18,guatemalteca,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,70,efectivo;tarjeta,TRUE,3,90,2890-1400,10:00-21:00,TRUE,Calzada San Juan Zona 18
+R43,La Cocina de la Tía,zona 5,guatemalteca,acogedor,FALSE,FALSE,TRUE,FALSE,FALSE,55,efectivo,TRUE,3,35,2901-2500,8:00-18:00,FALSE,4a Calle 12-20 Zona 5
+R44,Restaurante Doña Luisa,zona 2,guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,65,efectivo,TRUE,3,50,2012-3600,7:00-16:00,FALSE,16 Avenida 9-42 Zona 2
+R45,Tradiciones Guatemaltecas,zona 17,guatemalteca,tradicional,FALSE,TRUE,TRUE,FALSE,TRUE,80,efectivo;tarjeta,TRUE,3,75,2123-4700,11:00-20:00,FALSE,Calzada Roosevelt Zona 17
+R46,Olive Garden Pradera,zona 10,italiana;americana,familiar,FALSE,TRUE,TRUE,TRUE,TRUE,180,tarjeta,TRUE,4,90,2234-5900,11:00-23:00,TRUE,Centro Comercial Pradera Zona 10
+R47,Pecorino,zona 14,italiana,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,250,tarjeta,TRUE,5,40,2345-7000,18:00-23:00,FALSE,13 Calle 1-45 Zona 14
+R48,Il Ristorantino,zona 10,italiana,romántico,FALSE,FALSE,TRUE,FALSE,TRUE,220,tarjeta,TRUE,4,30,2456-8100,17:30-23:00,FALSE,12 Calle 6-14 Zona 10
+R49,Trattoria Italiana,zona 15,italiana,acogedor,FALSE,FALSE,TRUE,FALSE,TRUE,160,tarjeta,TRUE,4,35,2567-9200,12:00-22:00,TRUE,6a Avenida 15-38 Zona 15
+R50,Pasta e Basta,zona 4,italiana,casual,FALSE,FALSE,TRUE,TRUE,TRUE,140,efectivo;tarjeta,TRUE,3,50,2678-0300,11:00-21:00,TRUE,8a Calle 14-22 Zona 4
+R51,La Tagliatella,zona 11,italiana,moderno,FALSE,FALSE,TRUE,FALSE,TRUE,190,tarjeta,TRUE,4,45,2789-1400,12:00-22:00,FALSE,16 Calle 3-30 Zona 11
+R52,Capricciosa,zona 10,italiana,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,280,tarjeta,TRUE,5,25,2890-2500,19:00-24:00,FALSE,15 Calle 2-18 Zona 10
+R53,Bella Italia,zona 13,italiana,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,130,efectivo;tarjeta,TRUE,3,55,2901-3600,11:00-22:00,TRUE,20 Calle 8-25 Zona 13
+R54,Osteria del Centro,zona 1,italiana,acogedor,FALSE,FALSE,TRUE,FALSE,TRUE,170,tarjeta,TRUE,4,30,2012-4700,17:00-23:00,FALSE,12 Avenida 6-18 Zona 1
+R55,Pizzeria Vesuvio,zona 9,italiana,casual,FALSE,TRUE,TRUE,TRUE,FALSE,110,efectivo;tarjeta,TRUE,3,60,2123-5800,10:00-22:00,TRUE,7a Avenida 15-40 Zona 9
+R56,P.F. Chang's Oakland,zona 10,china;asiática,moderno,FALSE,FALSE,TRUE,TRUE,TRUE,200,tarjeta,TRUE,4,80,2234-6900,11:00-23:00,TRUE,Oakland Mall Zona 10
+R57,Wok Express,zona 14,china;asiática,casual,FALSE,FALSE,TRUE,TRUE,FALSE,90,efectivo;tarjeta,TRUE,3,40,2345-8000,10:00-22:00,TRUE,5a Avenida 18-25 Zona 14
+R58,Golden Dragon,zona 11,china,familiar,FALSE,FALSE,TRUE,FALSE,TRUE,120,efectivo;tarjeta,TRUE,3,65,2456-9100,11:00-21:00,FALSE,8 Calle 12-35 Zona 11
+R59,China Wok,zona 13,china;asiática,casual,FALSE,FALSE,TRUE,TRUE,FALSE,85,efectivo;tarjeta,TRUE,3,30,2567-0200,10:00-22:00,TRUE,19 Calle 6-40 Zona 13
+R60,Asia Gourmet,zona 12,asiática,moderno,FALSE,FALSE,TRUE,FALSE,TRUE,150,tarjeta,TRUE,4,50,2678-1300,12:00-22:00,TRUE,10 Calle 14-20 Zona 12
+R61,Yamato Sushi,zona 10,japonesa,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,240,tarjeta,TRUE,5,35,2789-2400,18:00-23:00,FALSE,11 Calle 3-25 Zona 10
+R62,Sakura,zona 14,japonesa;asiática,moderno,FALSE,FALSE,TRUE,TRUE,TRUE,180,tarjeta,TRUE,4,40,2890-3500,12:00-22:00,TRUE,14 Calle 8-30 Zona 14
+R63,Koi Sushi Bar,zona 15,japonesa,moderno,FALSE,FALSE,TRUE,FALSE,TRUE,220,tarjeta,TRUE,4,30,2901-4600,17:00-23:00,FALSE,3a Avenida 20-15 Zona 15
+R64,Zen Sushi,zona 4,japonesa,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,200,tarjeta,TRUE,4,25,2012-5700,18:30-23:00,FALSE,9a Calle 16-42 Zona 4
+R65,Tsunami Sushi,zona 11,japonesa,casual,FALSE,FALSE,TRUE,TRUE,TRUE,160,tarjeta,TRUE,3,45,2123-6800,11:30-22:00,TRUE,6a Avenida 14-28 Zona 11
+R66,TGI Friday's Pradera,zona 10,americana,familiar,FALSE,TRUE,TRUE,TRUE,TRUE,190,tarjeta,TRUE,4,100,2234-7900,11:00-24:00,TRUE,Centro Comercial Pradera Zona 10
+R67,Applebee's Metrocentro,zona 11,americana,familiar,FALSE,TRUE,TRUE,TRUE,TRUE,170,efectivo;tarjeta,TRUE,4,85,2345-9000,11:00-23:00,TRUE,Metrocentro Zona 11
+R68,Chili's Grill & Bar,zona 10,americana;mexicana,familiar,FALSE,TRUE,TRUE,TRUE,TRUE,180,tarjeta,TRUE,4,90,2456-0100,11:00-24:00,TRUE,Oakland Mall Zona 10
+R69,Hard Rock Cafe,zona 4,americana,moderno,FALSE,FALSE,FALSE,FALSE,TRUE,250,tarjeta,TRUE,4,70,2567-1200,12:00-2:00,FALSE,4a Avenida 16-01 Zona 4
+R70,Denny's Zona 10,zona 10,americana,familiar,FALSE,FALSE,TRUE,TRUE,FALSE,95,efectivo;tarjeta,TRUE,3,60,2678-2300,24 horas,TRUE,17 Calle 5-56 Zona 10
+R71,Wings,zona 9,americana,casual,TRUE,TRUE,TRUE,TRUE,FALSE,120,efectivo;tarjeta,TRUE,3,80,2789-3400,11:00-23:00,TRUE,10 Avenida 18-45 Zona 9
+R72,Buffalo Wild Wings,zona 14,americana,deportivo,FALSE,FALSE,TRUE,TRUE,TRUE,150,tarjeta,TRUE,3,95,2890-4500,11:00-1:00,TRUE,2a Avenida 16-30 Zona 14
+R73,Outback Steakhouse,zona 10,americana;carnes,familiar,FALSE,FALSE,TRUE,FALSE,TRUE,280,tarjeta,TRUE,4,70,2901-5600,17:00-23:00,FALSE,19 Calle 4-40 Zona 10
+R74,Hooters Guatemala,zona 13,americana,casual,FALSE,FALSE,TRUE,TRUE,TRUE,140,efectivo;tarjeta,TRUE,3,65,2012-6700,11:00-1:00,TRUE,24 Calle 12-50 Zona 13
+R75,Johnny Rocket's,zona 10,americana,retro,FALSE,TRUE,TRUE,TRUE,FALSE,130,efectivo;tarjeta,TRUE,3,50,2123-7800,10:00-22:00,TRUE,Centro Comercial Los Próceres Zona 10
+R76,El Rodeo,zona 13,carnes;argentina,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,190,efectivo;tarjeta,TRUE,4,80,2234-8900,12:00-22:00,FALSE,25 Calle 10-35 Zona 13
+R77,Parrilla Argentina,zona 14,argentina;carnes,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,220,tarjeta,TRUE,4,60,2345-0000,18:00-23:00,FALSE,7a Avenida 19-25 Zona 14
+R78,Los Ranchos,zona 10,carnes,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,260,tarjeta,TRUE,5,50,2456-1100,17:00-23:00,FALSE,16 Calle 4-55 Zona 10
+R79,Prime Steakhouse,zona 4,carnes,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,320,tarjeta,TRUE,5,40,2567-2200,19:00-24:00,FALSE,1a Avenida 15-20 Zona 4
+R80,Asados del Norte,zona 17,carnes,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,160,efectivo;tarjeta,TRUE,3,90,2678-3300,11:00-21:00,FALSE,Calzada San Juan Zona 17
+R81,La Parrilla del Abuelo,zona 12,carnes;guatemalteca,tradicional,FALSE,TRUE,TRUE,FALSE,TRUE,140,efectivo;tarjeta,TRUE,3,75,2789-4400,12:00-21:00,FALSE,13 Calle 8-22 Zona 12
+R82,El Asador,zona 11,carnes,familiar,FALSE,FALSE,TRUE,FALSE,TRUE,180,efectivo;tarjeta,TRUE,4,55,2890-5500,17:00-22:00,FALSE,9a Avenida 16-40 Zona 11
+R83,Casa de Carnes,zona 15,carnes,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,170,tarjeta,TRUE,4,45,2901-6600,16:00-22:00,FALSE,5a Calle 18-30 Zona 15
+R84,Parrillada Central,zona 1,carnes;guatemalteca,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,120,efectivo,TRUE,3,60,2012-7700,11:00-20:00,FALSE,15 Avenida 7-25 Zona 1
+R85,El Fogón,zona 18,carnes,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,130,efectivo;tarjeta,TRUE,3,70,2123-8800,12:00-21:00,FALSE,Calzada Aguilar Batres Zona 18
+R86,Red Lobster Pradera,zona 10,mariscos,familiar,FALSE,FALSE,TRUE,TRUE,TRUE,240,tarjeta,TRUE,4,80,2234-9900,11:00-22:00,FALSE,Centro Comercial Pradera Zona 10
+R87,Mariscos La Perla,zona 13,mariscos,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,180,efectivo;tarjeta,TRUE,3,90,2345-1000,10:00-21:00,FALSE,26 Calle 14-45 Zona 13
+R88,El Capitán,zona 4,mariscos,casual,FALSE,FALSE,TRUE,FALSE,TRUE,160,efectivo;tarjeta,TRUE,3,60,2456-2100,11:00-20:00,FALSE,12a Avenida 18-30 Zona 4
+R89,Costa Brava,zona 14,mariscos,elegante,FALSE,FALSE,TRUE,FALSE,TRUE,220,tarjeta,TRUE,4,50,2567-3200,17:00-23:00,FALSE,8a Calle 20-15 Zona 14
+R90,Marisquería El Muelle,zona 11,mariscos,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,150,efectivo;tarjeta,TRUE,3,70,2678-4300,10:00-21:00,FALSE,11 Avenida 17-35 Zona 11
+R91,Los Ceviches,zona 12,mariscos,casual,FALSE,FALSE,TRUE,TRUE,TRUE,130,efectivo;tarjeta,TRUE,3,45,2789-5400,11:00-20:00,TRUE,16 Calle 9-28 Zona 12
+R92,Marea Alta,zona 15,mariscos,moderno,FALSE,FALSE,TRUE,FALSE,TRUE,200,tarjeta,TRUE,4,40,2890-6500,12:00-22:00,FALSE,9a Avenida 22-18 Zona 15
+R93,El Pescador,zona 7,mariscos,tradicional,FALSE,FALSE,TRUE,FALSE,FALSE,110,efectivo,TRUE,3,55,2901-7600,10:00-19:00,FALSE,22 Calle 20-12 Zona 7
+R94,Ostras y Más,zona 10,mariscos,elegante,FALSE,FALSE,FALSE,FALSE,TRUE,280,tarjeta,TRUE,5,30,2012-8700,18:00-23:00,FALSE,14 Calle 3-42 Zona 10
+R95,Bahía Azul,zona 13,mariscos,acogedor,FALSE,FALSE,TRUE,FALSE,TRUE,170,efectivo;tarjeta,TRUE,3,65,2123-9800,11:00-21:00,FALSE,27 Calle 11-20 Zona 13
+R96,Taco Bell Metrocentro,zona 11,mexicana;comida rápida,casual,FALSE,FALSE,TRUE,TRUE,FALSE,50,efectivo;tarjeta,TRUE,3,40,2234-0900,10:00-22:00,TRUE,Metrocentro Zona 11
+R97,Tacontento,zona 10,mexicana,casual,TRUE,TRUE,TRUE,TRUE,FALSE,90,efectivo;tarjeta,TRUE,3,70,2345-2000,10:00-23:00,TRUE,18 Calle 6-30 Zona 10
+R98,El Sombrero,zona 14,mexicana,familiar,FALSE,TRUE,TRUE,FALSE,TRUE,110,efectivo;tarjeta,TRUE,3,60,2456-3100,11:00-22:00,FALSE,15 Calle 12-25 Zona 14
+R99,Casa México,zona 4,mexicana,tradicional,FALSE,FALSE,TRUE,FALSE,TRUE,120,tarjeta,TRUE,4,50,2567-4200,12:00-21:00,FALSE,6a Avenida 19-38 Zona 4
+R100,Cantina La Cucaracha,zona 9,mexicana,casual,TRUE,FALSE,TRUE,TRUE,FALSE,100,efectivo;tarjeta,TRUE,3,80,2678-5300,16:00-1:00,TRUE,12 Avenida 20-45 Zona 9

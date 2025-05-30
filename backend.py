@@ -239,6 +239,48 @@ def get_comments(restaurant_id):
         return handle_error(e, "Error al leer comentarios")
 
 
+@app.route('/rate', methods=['POST'])
+@token_required
+def rate_restaurant():
+    try:
+        data = request.get_json()
+        restaurant_id = data.get('restaurant_id')
+        score = int(data.get('score'))
+        user_id = request.current_user['user_id']
+
+        if score < 1 or score > 5:
+            return jsonify({"status": "error", "message": "La calificación debe estar entre 1 y 5"}), 400
+
+        query = """
+        MATCH (u:User {id: $user_id}), (r:Restaurant {id: $restaurant_id})
+        MERGE (u)-[rel:RATED]->(r)
+        SET rel.score = $score
+        RETURN rel.score AS score
+        """
+
+        result = db.execute_query(query, {"user_id": user_id, "restaurant_id": restaurant_id, "score": score})
+        return jsonify({"status": "success", "score": result[0]['score']})
+    except Exception as e:
+        return handle_error(e, "Error al guardar calificación")
+
+@app.route('/rating/<restaurant_id>', methods=['GET'])
+def get_restaurant_rating(restaurant_id):
+    try:
+        query = """
+        MATCH (:User)-[r:RATED]->(res:Restaurant {id: $restaurant_id})
+        RETURN avg(r.score) AS average, count(r) AS total
+        """
+        result = db.execute_query(query, {"restaurant_id": restaurant_id})
+        rating = result[0]
+        return jsonify({
+            "status": "success",
+            "average": round(rating["average"], 2) if rating["average"] is not None else None,
+            "total": rating["total"]
+        })
+    except Exception as e:
+        return handle_error(e, "Error al obtener calificación")
+
+
 
 
 #-----------------------------------------------------------------------------------------------------#
