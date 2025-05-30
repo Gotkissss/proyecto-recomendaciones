@@ -140,6 +140,9 @@ def get_all_restaurants():
             r.takeout as takeout,
             r.terraza as outdoor_seating,
             r.wifi as wifi,
+            r.parqueo as parking,
+            r.musica_vivo as live_music,
+            r.happy_hour as happy_hour,
             collect(DISTINCT c.nombre) as categories
         ORDER BY r.nombre
         """
@@ -147,6 +150,7 @@ def get_all_restaurants():
         return jsonify({"status": "success", "restaurants": results})
     except Exception as e:
         return handle_error(e, "Failed to fetch restaurants")
+
 
 @app.route('/health')
 def health():
