@@ -1010,60 +1010,89 @@
 
     
 async function init() {
+    console.log('Iniciando aplicación...');
     loadUser();
-    await loadRestaurantsFromBackend();
-    await loadCategories();
-    await loadDynamicFilters(); 
-    displayRestaurants(restaurants);
+    
+    try {
+
+        await loadRestaurantsFromBackend();
+        console.log('Restaurantes cargados:', restaurants.length);
+
+        await loadCategories();
+        console.log('Categorías cargadas');
+        
+
+        displayRestaurants(restaurants);
+        console.log('Restaurantes mostrados');
+        
+
+        await populateDynamicFilters();
+        console.log('Filtros dinámicos cargados');
+        
+    } catch (error) {
+        console.error('Error en init():', error);
+        displayRestaurants([]);
+    }
+    
+    // Configurar event listeners al final
     setupEventListeners();
+    console.log('Event listeners configurados');
 }
 
+    // REEMPLAZA tu función loadRestaurantsFromBackend() con esta:
     async function loadRestaurantsFromBackend() {
+        console.log('Intentando cargar restaurantes desde backend...');
         try {
             const res = await fetch('http://localhost:5000/restaurants');
+            console.log('Respuesta del servidor:', res.status);
+            
             const data = await res.json();
+            console.log('Datos recibidos:', data);
+            
             if (data.status === 'success') {
                 restaurants = data.restaurants.map(r => ({
-                id: r.id,
-                name: r.name,
-                zone: r.zone,
-                categories: r.categories,
-                price_range: `Q${r.price}`,
-                ambiance: r.ambiance,
-                pet_friendly: r.pet_friendly,
-                kids_games: r.kids_games,
-                accessible: r.accessible,
-                promotions: r.promotions,
-                reservations: r.accepts_reservations,
-                payment_methods: r.payment_methods,
-                healthy_options: r.healthy_options,
-                service_level: r.service_level,
-                capacity: r.capacity,
-                phone: r.phone,
-                delivery: r.delivery,
-                address: r.address,
-                schedule: r.schedule,
-                rating: r.rating,
-                reviews: r.reviews,
-                image: "🍽️",
-                features: {
+                    id: r.id,
+                    name: r.name,
+                    zone: r.zone,
+                    categories: r.categories,
+                    price_range: `Q${r.price}`,
+                    ambiance: r.ambiance,
                     pet_friendly: r.pet_friendly,
                     kids_games: r.kids_games,
                     accessible: r.accessible,
                     promotions: r.promotions,
                     reservations: r.accepts_reservations,
-                    delivery: r.delivery
-                },
-                ratings: [],
-                comments: []
-            }));
-
-
+                    payment_methods: r.payment_methods,
+                    healthy_options: r.healthy_options,
+                    service_level: r.service_level,
+                    capacity: r.capacity,
+                    phone: r.phone,
+                    delivery: r.delivery,
+                    address: r.address,
+                    schedule: r.schedule,
+                    rating: r.rating,
+                    reviews: r.reviews,
+                    image: "🍽️",
+                    features: {
+                        pet_friendly: r.pet_friendly,
+                        kids_games: r.kids_games,
+                        accessible: r.accessible,
+                        promotions: r.promotions,
+                        reservations: r.accepts_reservations,
+                        delivery: r.delivery
+                    },
+                    ratings: [],
+                    comments: []
+                }));
+                
+                console.log('Restaurantes procesados:', restaurants.length);
             } else {
-                showError('Error al cargar restaurantes');
+                console.error('Error en respuesta del servidor:', data.message);
+                showError('Error al cargar restaurantes: ' + data.message);
             }
         } catch (err) {
-            showError('Error de red al obtener restaurantes');
+            console.error('Error de red:', err);
+            showError('Error de red al obtener restaurantes: ' + err.message);
         }
     }
 
