@@ -1087,20 +1087,25 @@
     let userRating = 0;
     let restaurants = [];
 
+    // Función init corregida
     async function init() {
         console.log('Iniciando aplicación...');
         loadUser();
         
         try {
+            // Cargar restaurantes primero
             await loadRestaurantsFromBackend();
             console.log('Restaurantes cargados:', restaurants.length);
 
+            // Cargar categorías
             await loadCategories();
             console.log('Categorías cargadas');
             
+            // Mostrar restaurantes
             displayRestaurants(restaurants);
             console.log('Restaurantes mostrados');
             
+            // IMPORTANTE: Cargar filtros dinámicos DESPUÉS de tener los restaurantes
             await populateDynamicFilters();
             console.log('Filtros dinámicos cargados');
             
@@ -1113,6 +1118,7 @@
         console.log('Event listeners configurados');
     }
 
+    // También corrige la función loadRestaurantsFromBackend para mejor debugging
     async function loadRestaurantsFromBackend() {
         console.log('Intentando cargar restaurantes desde backend...');
         try {
@@ -1120,45 +1126,56 @@
             console.log('Respuesta del servidor:', res.status);
             
             const data = await res.json();
-            console.log('Datos recibidos:', data);
+            console.log('Datos recibidos del servidor:', data);
             
             if (data.status === 'success') {
-                restaurants = data.restaurants.map(r => ({
-                    id: r.id,
-                    name: r.name,
-                    zone: r.zone,
-                    categories: r.categories || [],
-                    price_range: `Q${r.price}`,
-                    ambiance: r.ambiance,
-                    pet_friendly: r.pet_friendly,
-                    kids_games: r.kids_games,
-                    accessible: r.accessible,
-                    promotions: r.promotions,
-                    reservations: r.accepts_reservations,
-                    payment_methods: r.payment_methods,
-                    healthy_options: r.healthy_options,
-                    service_level: r.service_level,
-                    capacity: r.capacity,
-                    phone: r.phone,
-                    delivery: r.delivery,
-                    address: r.address,
-                    schedule: r.schedule,
-                    rating: r.rating,
-                    reviews: r.reviews,
-                    image: "🍽️",
-                    features: {
-                        pet_friendly: r.pet_friendly === "TRUE" || r.pet_friendly === true,
-                        kids_games: r.kids_games === "TRUE" || r.kids_games === true,
-                        accessible: r.accessible === "TRUE" || r.accessible === true,
-                        promotions: r.promotions === "TRUE" || r.promotions === true,
-                        reservations: r.accepts_reservations === "TRUE" || r.accepts_reservations === true,
-                        delivery: r.delivery === "TRUE" || r.delivery === true
-                    },
-                    ratings: [],
-                    comments: []
-                }));
+                restaurants = data.restaurants.map(r => {
+                    // Debug: mostrar datos de un restaurante para verificar la estructura
+                    if (data.restaurants.indexOf(r) === 0) {
+                        console.log('Datos del primer restaurante:', r);
+                    }
+                    
+                    return {
+                        id: r.id,
+                        name: r.name,
+                        zone: r.zone,
+                        categories: r.categories || [],
+                        price_range: `Q${r.price}`,
+                        ambiance: r.ambiance,
+                        pet_friendly: r.pet_friendly,
+                        kids_games: r.kids_games,
+                        accessible: r.accessible,
+                        promotions: r.promotions,
+                        reservations: r.accepts_reservations,
+                        payment_methods: r.payment_methods,
+                        healthy_options: r.healthy_options,
+                        service_level: r.service_level,
+                        capacity: r.capacity,
+                        phone: r.phone,
+                        delivery: r.delivery,
+                        address: r.address,
+                        schedule: r.schedule,
+                        rating: r.rating,
+                        reviews: r.reviews,
+                        image: "🍽️",
+                        features: {
+                            pet_friendly: r.pet_friendly === "TRUE" || r.pet_friendly === true,
+                            kids_games: r.kids_games === "TRUE" || r.kids_games === true,
+                            accessible: r.accessible === "TRUE" || r.accessible === true,
+                            promotions: r.promotions === "TRUE" || r.promotions === true,
+                            reservations: r.accepts_reservations === "TRUE" || r.accepts_reservations === true,
+                            delivery: r.delivery === "TRUE" || r.delivery === true
+                        },
+                        ratings: [],
+                        comments: []
+                    };
+                });
                 
                 console.log('Restaurantes procesados:', restaurants.length);
+                // Debug: mostrar el primer restaurante procesado
+                if (restaurants.length > 0) {
+                    console.log('Primer restaurante procesado:', restaurants[0]);
+                }
             } else {
                 console.error('Error en respuesta del servidor:', data.message);
                 showError('Error al cargar restaurantes: ' + data.message);
@@ -1219,73 +1236,140 @@
         }
     }
 
+    // Función corregida para poblar filtros dinámicos
     async function populateDynamicFilters() {
+        console.log('Poblando filtros dinámicos...');
+        
         try {
+            // Intentar cargar desde el backend primero
             const res = await fetch('http://localhost:5000/filter-options');
             const data = await res.json();
             
-            if (data.status === 'success') {
+            if (data.status === 'success' && data.filter_options) {
+                console.log('Datos de filtros del backend:', data.filter_options);
+                
                 const options = data.filter_options;
                 
-                fillSelectWithOptions('zoneFilter', options.zones);
-                fillSelectWithOptions('ambianceFilter', options.ambiances);
-                fillSelectWithOptions('paymentFilter', options.payment_methods);
-                fillSelectWithOptions('serviceLevelFilter', options.service_levels);
+                // Poblar cada filtro
+                fillSelectWithOptions('zoneFilter', options.zones, 'Todas las zonas');
+                fillSelectWithOptions('ambianceFilter', options.ambiances, 'Todos los ambientes');
+                fillSelectWithOptions('paymentFilter', options.payment_methods, 'Todos los métodos');
+                fillSelectWithOptions('serviceLevelFilter', options.service_levels, 'Todos los niveles');
                 
+                // Manejar opciones saludables por separado
                 const healthyFilter = document.getElementById('healthyFilter');
-                healthyFilter.innerHTML = '<option value="">Todas</option>';
+                healthyFilter.innerHTML = '<option value="">Todas las opciones</option>';
                 
-                options.healthy_options.forEach(option => {
-                    const opt = document.createElement('option');
-                    opt.value = option.toLowerCase();
-                    opt.textContent = option;
-                    healthyFilter.appendChild(opt);
-                });
+                if (options.healthy_options && options.healthy_options.length > 0) {
+                    options.healthy_options.forEach(option => {
+                        if (option && option.trim()) {
+                            const opt = document.createElement('option');
+                            opt.value = option.toLowerCase();
+                            opt.textContent = option;
+                            healthyFilter.appendChild(opt);
+                        }
+                    });
+                }
+                
+                console.log('Filtros dinámicos cargados desde backend exitosamente');
+            } else {
+                console.log('Backend no disponible, usando datos locales');
+                throw new Error('Backend no disponible');
             }
         } catch (error) {
-            console.error('Error al cargar filtros dinámicos:', error);
+            console.error('Error al cargar filtros del backend:', error);
+            console.log('Cargando filtros desde datos locales...');
             loadDynamicFiltersFromLoadedData();
         }
     }
 
-    function fillSelectWithOptions(selectId, options) {
+        // Función corregida para llenar selects
+    function fillSelectWithOptions(selectId, options, defaultText = 'Todos') {
         const select = document.getElementById(selectId);
-        const firstOption = select.children[0].cloneNode(true);
-        select.innerHTML = '';
-        select.appendChild(firstOption);
+        if (!select) {
+            console.error(`Select con ID ${selectId} no encontrado`);
+            return;
+        }
         
-        options.forEach(option => {
-            if (option && option.trim()) {
-                const opt = document.createElement('option');
-                opt.value = option.toLowerCase();
-                opt.textContent = option;
-                select.appendChild(opt);
-            }
+        // Limpiar el select y agregar opción por defecto
+        select.innerHTML = `<option value="">${defaultText}</option>`;
+        
+        if (!options || !Array.isArray(options)) {
+            console.warn(`Opciones inválidas para ${selectId}:`, options);
+            return;
+        }
+        
+        // Filtrar y agregar opciones válidas
+        const validOptions = options.filter(option => option && option.trim() && option !== 'null' && option !== 'undefined');
+        
+        console.log(`Agregando ${validOptions.length} opciones a ${selectId}:`, validOptions);
+        
+        validOptions.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.toLowerCase().trim();
+            opt.textContent = option.trim();
+            select.appendChild(opt);
         });
     }
 
+    // Función mejorada para cargar filtros desde datos locales
     function loadDynamicFiltersFromLoadedData() {
+        console.log('Cargando filtros desde datos de restaurantes locales...');
+        
+        if (!restaurants || restaurants.length === 0) {
+            console.warn('No hay restaurantes cargados para extraer filtros');
+            return;
+        }
+        
         const zones = new Set();
         const ambiances = new Set();
         const payments = new Set();
         const services = new Set();
         const healthyOptions = new Set();
 
-        restaurants.forEach(r => {
-            if (r.zone && r.zone.trim()) zones.add(r.zone.trim());
-            if (r.ambiance && r.ambiance.trim()) ambiances.add(r.ambiance.trim());
-            if (r.payment_methods && r.payment_methods.trim()) payments.add(r.payment_methods.trim());
-            if (r.service_level && r.service_level.trim()) services.add(r.service_level.trim());
-            if (r.healthy_options && r.healthy_options.trim()) healthyOptions.add(r.healthy_options.trim());
+        restaurants.forEach(restaurant => {
+            // Agregar zona
+            if (restaurant.zone && restaurant.zone.trim() && restaurant.zone !== 'null') {
+                zones.add(restaurant.zone.trim());
+            }
+            
+            // Agregar ambiente
+            if (restaurant.ambiance && restaurant.ambiance.trim() && restaurant.ambiance !== 'null') {
+                ambiances.add(restaurant.ambiance.trim());
+            }
+            
+            // Agregar métodos de pago
+            if (restaurant.payment_methods && restaurant.payment_methods.trim() && restaurant.payment_methods !== 'null') {
+                payments.add(restaurant.payment_methods.trim());
+            }
+            
+            // Agregar nivel de servicio
+            if (restaurant.service_level && restaurant.service_level.trim() && restaurant.service_level !== 'null') {
+                services.add(restaurant.service_level.trim());
+            }
+            
+            // Agregar opciones saludables
+            if (restaurant.healthy_options && restaurant.healthy_options.trim() && restaurant.healthy_options !== 'null') {
+                healthyOptions.add(restaurant.healthy_options.trim());
+            }
         });
 
-        fillSelectWithOptions('zoneFilter', Array.from(zones));
-        fillSelectWithOptions('ambianceFilter', Array.from(ambiances));
-        fillSelectWithOptions('paymentFilter', Array.from(payments));
-        fillSelectWithOptions('serviceLevelFilter', Array.from(services));
+        console.log('Datos extraídos:');
+        console.log('Zonas:', Array.from(zones));
+        console.log('Ambientes:', Array.from(ambiances));
+        console.log('Métodos de pago:', Array.from(payments));
+        console.log('Niveles de servicio:', Array.from(services));
+        console.log('Opciones saludables:', Array.from(healthyOptions));
+
+        // Poblar los filtros
+        fillSelectWithOptions('zoneFilter', Array.from(zones), 'Todas las zonas');
+        fillSelectWithOptions('ambianceFilter', Array.from(ambiances), 'Todos los ambientes');
+        fillSelectWithOptions('paymentFilter', Array.from(payments), 'Todos los métodos');
+        fillSelectWithOptions('serviceLevelFilter', Array.from(services), 'Todos los niveles');
         
+        // Opciones saludables
         const healthyFilter = document.getElementById('healthyFilter');
-        healthyFilter.innerHTML = '<option value="">Todas</option>';
+        healthyFilter.innerHTML = '<option value="">Todas las opciones</option>';
         
         Array.from(healthyOptions).forEach(option => {
             const opt = document.createElement('option');
@@ -1293,7 +1377,11 @@
             opt.textContent = option;
             healthyFilter.appendChild(opt);
         });
+        
+        console.log('Filtros dinámicos cargados desde datos locales exitosamente');
     }
+
+
     function displayRestaurants(restaurantsToShow) {
         const grid = document.getElementById('restaurantGrid');
         if (restaurantsToShow.length === 0) {
