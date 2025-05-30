@@ -52,7 +52,6 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
         }
 
-
         .auth-buttons {
             display: flex;
             gap: 15px;
@@ -112,7 +111,6 @@
             box-shadow: 0 12px 35px rgba(96, 165, 250, 0.6);
         }
 
-
         .btn-secondary {
             background: #1e3a8a;
             color: white;
@@ -125,7 +123,6 @@
             transform: translateY(-2px);
         }
 
-
         .btn-logout {
             background: #1e3a8a;
             color: white;
@@ -137,7 +134,6 @@
             background: #1c357a;
             transform: translateY(-2px);
         }
-
 
         /* Main Content */
         .main-content {
@@ -453,7 +449,6 @@
             margin-bottom: 15px;
             color: #000;
         }
-
         .modal-info-box {
             background: #f0f9ff;
             border: 2px solid #dbeafe;
@@ -626,7 +621,7 @@
             color: #000;
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 14px;
             border: 2px solid #e1e8ed;
@@ -636,7 +631,7 @@
             color: #000;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #60a5fa;
             box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
@@ -898,7 +893,6 @@
                         <p id="modalCategories"></p>
                     </div>
                 </div>
-                
                 <div class="modal-section">
                     <h3>📍 Dirección</h3>
                     <div class="modal-info-box">
@@ -1086,3 +1080,601 @@
             </form>
         </div>
     </div>
+
+   <script>
+    let currentUser = null;
+    let currentRestaurant = null;
+    let userRating = 0;
+    let restaurants = [];
+
+    async function init() {
+        console.log('Iniciando aplicación...');
+        loadUser();
+        
+        try {
+            await loadRestaurantsFromBackend();
+            console.log('Restaurantes cargados:', restaurants.length);
+
+            await loadCategories();
+            console.log('Categorías cargadas');
+            
+            displayRestaurants(restaurants);
+            console.log('Restaurantes mostrados');
+            
+            await populateDynamicFilters();
+            console.log('Filtros dinámicos cargados');
+            
+        } catch (error) {
+            console.error('Error en init():', error);
+            displayRestaurants([]);
+        }
+        
+        setupEventListeners();
+        console.log('Event listeners configurados');
+    }
+
+    async function loadRestaurantsFromBackend() {
+        console.log('Intentando cargar restaurantes desde backend...');
+        try {
+            const res = await fetch('http://localhost:5000/restaurants');
+            console.log('Respuesta del servidor:', res.status);
+            
+            const data = await res.json();
+            console.log('Datos recibidos:', data);
+            
+            if (data.status === 'success') {
+                restaurants = data.restaurants.map(r => ({
+                    id: r.id,
+                    name: r.name,
+                    zone: r.zone,
+                    categories: r.categories || [],
+                    price_range: `Q${r.price}`,
+                    ambiance: r.ambiance,
+                    pet_friendly: r.pet_friendly,
+                    kids_games: r.kids_games,
+                    accessible: r.accessible,
+                    promotions: r.promotions,
+                    reservations: r.accepts_reservations,
+                    payment_methods: r.payment_methods,
+                    healthy_options: r.healthy_options,
+                    service_level: r.service_level,
+                    capacity: r.capacity,
+                    phone: r.phone,
+                    delivery: r.delivery,
+                    address: r.address,
+                    schedule: r.schedule,
+                    rating: r.rating,
+                    reviews: r.reviews,
+                    image: "🍽️",
+                    features: {
+                        pet_friendly: r.pet_friendly === "TRUE" || r.pet_friendly === true,
+                        kids_games: r.kids_games === "TRUE" || r.kids_games === true,
+                        accessible: r.accessible === "TRUE" || r.accessible === true,
+                        promotions: r.promotions === "TRUE" || r.promotions === true,
+                        reservations: r.accepts_reservations === "TRUE" || r.accepts_reservations === true,
+                        delivery: r.delivery === "TRUE" || r.delivery === true
+                    },
+                    ratings: [],
+                    comments: []
+                }));
+                
+                console.log('Restaurantes procesados:', restaurants.length);
+            } else {
+                console.error('Error en respuesta del servidor:', data.message);
+                showError('Error al cargar restaurantes: ' + data.message);
+            }
+        } catch (err) {
+            console.error('Error de red:', err);
+            showError('Error de red al obtener restaurantes: ' + err.message);
+        }
+    }
+
+    function setupEventListeners() {
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        
+        const budgetRange = document.getElementById('budgetRange');
+        budgetRange.addEventListener('input', function () {
+            const value = this.value;
+            document.getElementById('budgetValue').textContent =
+                value == 1000 ? 'Sin límite' : `Q${value}`;
+        });
+
+        document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+        document.getElementById('zoneFilter').addEventListener('change', applyFilters);
+        document.getElementById('ambianceFilter').addEventListener('change', applyFilters);
+        document.getElementById('paymentFilter').addEventListener('change', applyFilters);
+        document.getElementById('healthyFilter').addEventListener('change', applyFilters);
+        document.getElementById('serviceLevelFilter').addEventListener('change', applyFilters);
+        document.getElementById('capacityFilter').addEventListener('input', applyFilters);
+
+        document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('registerForm').addEventListener('submit', handleRegister);
+        document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+    }
+
+    async function loadCategories() {
+        try {
+            const res = await fetch('http://localhost:5000/categories');
+            const data = await res.json();
+            
+            if (data.status === 'success') {
+                const categoryFilter = document.getElementById('categoryFilter');
+                categoryFilter.innerHTML = '<option value="">Todas las Categorías</option>';
+                
+                data.categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryFilter.appendChild(option);
+                });
+            } else {
+                console.error('Error al cargar categorías:', data.message);
+            }
+        } catch (error) {
+            console.error('Error de red al cargar categorías:', error);
+        }
+    }
+
+    async function populateDynamicFilters() {
+        try {
+            const res = await fetch('http://localhost:5000/filter-options');
+            const data = await res.json();
+            
+            if (data.status === 'success') {
+                const options = data.filter_options;
+                
+                fillSelectWithOptions('zoneFilter', options.zones);
+                fillSelectWithOptions('ambianceFilter', options.ambiances);
+                fillSelectWithOptions('paymentFilter', options.payment_methods);
+                fillSelectWithOptions('serviceLevelFilter', options.service_levels);
+                
+                const healthyFilter = document.getElementById('healthyFilter');
+                healthyFilter.innerHTML = '<option value="">Todas</option>';
+                
+                options.healthy_options.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.toLowerCase();
+                    opt.textContent = option;
+                    healthyFilter.appendChild(opt);
+                });
+            }
+        } catch (error) {
+            console.error('Error al cargar filtros dinámicos:', error);
+            loadDynamicFiltersFromLoadedData();
+        }
+    }
+
+    function fillSelectWithOptions(selectId, options) {
+        const select = document.getElementById(selectId);
+        const firstOption = select.children[0].cloneNode(true);
+        select.innerHTML = '';
+        select.appendChild(firstOption);
+        
+        options.forEach(option => {
+            if (option && option.trim()) {
+                const opt = document.createElement('option');
+                opt.value = option.toLowerCase();
+                opt.textContent = option;
+                select.appendChild(opt);
+            }
+        });
+    }
+
+    function loadDynamicFiltersFromLoadedData() {
+        const zones = new Set();
+        const ambiances = new Set();
+        const payments = new Set();
+        const services = new Set();
+        const healthyOptions = new Set();
+
+        restaurants.forEach(r => {
+            if (r.zone && r.zone.trim()) zones.add(r.zone.trim());
+            if (r.ambiance && r.ambiance.trim()) ambiances.add(r.ambiance.trim());
+            if (r.payment_methods && r.payment_methods.trim()) payments.add(r.payment_methods.trim());
+            if (r.service_level && r.service_level.trim()) services.add(r.service_level.trim());
+            if (r.healthy_options && r.healthy_options.trim()) healthyOptions.add(r.healthy_options.trim());
+        });
+
+        fillSelectWithOptions('zoneFilter', Array.from(zones));
+        fillSelectWithOptions('ambianceFilter', Array.from(ambiances));
+        fillSelectWithOptions('paymentFilter', Array.from(payments));
+        fillSelectWithOptions('serviceLevelFilter', Array.from(services));
+        
+        const healthyFilter = document.getElementById('healthyFilter');
+        healthyFilter.innerHTML = '<option value="">Todas</option>';
+        
+        Array.from(healthyOptions).forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.toLowerCase();
+            opt.textContent = option;
+            healthyFilter.appendChild(opt);
+        });
+    }
+    function displayRestaurants(restaurantsToShow) {
+        const grid = document.getElementById('restaurantGrid');
+        if (restaurantsToShow.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <h3>🔍 No se encontraron restaurantes</h3>
+                    <p>Intenta ajustar tus filtros de búsqueda</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = restaurantsToShow.map(restaurant => {
+            const features = Object.keys(restaurant.features)
+                .filter(key => restaurant.features[key])
+                .slice(0, 3);
+
+            const featureTags = features.map(feature => {
+                const labels = {
+                    pet_friendly: '🐕 Pet Friendly',
+                    kids_games: '🎮 Juegos',
+                    accessible: '♿ Accesible',
+                    promotions: '🎯 Promociones',
+                    reservations: '📅 Reservas',
+                    delivery: '🚚 Delivery'
+                };
+                return `<span class="feature-tag">${labels[feature] || feature}</span>`;
+            }).join('');
+
+            return `
+                <div class="restaurant-card" onclick="showRestaurantDetail('${restaurant.id}')">
+                    <div class="restaurant-image">${restaurant.image}</div>
+                    <h3 class="restaurant-name">${restaurant.name}</h3>
+                    <div class="restaurant-price">${restaurant.price_range}</div>
+                    <div class="restaurant-features">${featureTags}</div>
+                    <div class="restaurant-categories">${restaurant.categories.join(' • ')}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function applyFilters() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const maxBudget = parseInt(document.getElementById('budgetRange').value);
+        const categoryFilter = document.getElementById('categoryFilter').value;
+        const zone = document.getElementById('zoneFilter').value.toLowerCase();
+        const ambiance = document.getElementById('ambianceFilter').value.toLowerCase();
+        const payment = document.getElementById('paymentFilter').value.toLowerCase();
+        const healthy = document.getElementById('healthyFilter').value.toLowerCase();
+        const service = document.getElementById('serviceLevelFilter').value.toLowerCase();
+        const capacity = parseInt(document.getElementById('capacityFilter').value || 0);
+
+        const selectedFeatures = [];
+        document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked').forEach(cb => {
+            selectedFeatures.push(cb.id);
+        });
+
+        const filtered = restaurants.filter(restaurant => {
+            const matchesSearch = !searchTerm || 
+                restaurant.name.toLowerCase().includes(searchTerm) ||
+                restaurant.categories.some(cat => cat.toLowerCase().includes(searchTerm));
+
+            const priceNum = parseInt(restaurant.price_range.replace(/[^\d]/g, '')) || 0;
+            const matchesBudget = maxBudget >= 1000 || priceNum <= maxBudget;
+
+            const matchesCategory = !categoryFilter || restaurant.categories.includes(categoryFilter);
+
+            const matchesFeatures = selectedFeatures.every(f => restaurant.features[f]);
+
+            const matchesZone = !zone || (restaurant.zone && restaurant.zone.toLowerCase().includes(zone));
+            const matchesAmbiance = !ambiance || (restaurant.ambiance && restaurant.ambiance.toLowerCase().includes(ambiance));
+            const matchesPayment = !payment || (restaurant.payment_methods && restaurant.payment_methods.toLowerCase().includes(payment));
+            const matchesHealthy = !healthy || (restaurant.healthy_options && restaurant.healthy_options.toLowerCase() === healthy);
+            const matchesService = !service || (restaurant.service_level && restaurant.service_level.toLowerCase().includes(service));
+            const matchesCapacity = !capacity || (restaurant.capacity && parseInt(restaurant.capacity) >= capacity);
+
+            return matchesSearch &&
+                matchesBudget &&
+                matchesCategory &&
+                matchesFeatures &&
+                matchesZone &&
+                matchesAmbiance &&
+                matchesPayment &&
+                matchesHealthy &&
+                matchesService &&
+                matchesCapacity;
+        });
+
+        displayRestaurants(filtered);
+    }
+
+    function showRestaurantDetail(id) {
+        currentRestaurant = restaurants.find(r => r.id === id);
+        if (!currentRestaurant) return;
+
+        document.getElementById('modalRestaurantName').textContent = currentRestaurant.name;
+        document.getElementById('modalRestaurantPrice').textContent = currentRestaurant.price_range;
+        document.getElementById('modalCategories').textContent = currentRestaurant.categories.join(' • ');
+        
+        document.getElementById('modalAddress').textContent = currentRestaurant.address || 'No disponible';
+        document.getElementById('modalZone').textContent = currentRestaurant.zone || 'No disponible';
+        document.getElementById('modalAmbiance').textContent = currentRestaurant.ambiance || 'No disponible';
+        document.getElementById('modalPaymentMethods').textContent = currentRestaurant.payment_methods || 'No disponible';
+        document.getElementById('modalHealthyOptions').textContent = currentRestaurant.healthy_options || 'No disponible';
+        document.getElementById('modalServiceLevel').textContent = currentRestaurant.service_level || 'No disponible';
+        document.getElementById('modalCapacity').textContent = currentRestaurant.capacity ? `${currentRestaurant.capacity} personas` : 'No disponible';
+        document.getElementById('modalPhone').textContent = currentRestaurant.phone || 'No disponible';
+        document.getElementById('modalSchedule').textContent = currentRestaurant.schedule || 'No disponible';
+        document.getElementById('modalRating').textContent = currentRestaurant.rating 
+            ? `${currentRestaurant.rating} (${currentRestaurant.reviews || 0} reseñas)` 
+            : 'Sin calificación';
+
+        const featureLabels = {
+            pet_friendly: '🐕 Pet Friendly',
+            kids_games: '🎮 Juegos para Niños',
+            accessible: '♿ Accesible',
+            promotions: '🎯 Promociones',
+            reservations: '📅 Acepta Reservas',
+            delivery: '🚚 Delivery'
+        };
+
+        document.getElementById('modalFeatures').innerHTML = Object.keys(currentRestaurant.features)
+            .filter(k => currentRestaurant.features[k])
+            .map(f => `<div class="modal-feature-item">${featureLabels[f] || f}</div>`)
+            .join('');
+
+        loadRatingsAndComments();
+        document.getElementById('addCommentSection').style.display = currentUser ? 'block' : 'none';
+        document.getElementById('restaurantModal').style.display = 'block';
+    }
+
+    async function loadRatingsAndComments() {
+        if (!currentRestaurant) return;
+
+        const commentsSection = document.getElementById('commentsSection');
+
+        try {
+            const res = await fetch(`http://localhost:5000/comments/${currentRestaurant.id}`);
+            const data = await res.json();
+
+            if (data.status === 'success') {
+                const comments = data.comments;
+                if (comments.length === 0) {
+                    commentsSection.innerHTML = '<p style="text-align:center; color:#555;">No hay comentarios aún.</p>';
+                } else {
+                    commentsSection.innerHTML = comments.map(c => `
+                        <div class="comment">
+                            <div class="comment-author">${c.author || 'Anónimo'}</div>
+                            <div class="comment-text">${c.text}</div>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                showError('Error al cargar comentarios');
+            }
+        } catch {
+            showError('No se pudieron obtener los comentarios');
+        }
+
+        try {
+            const res = await fetch(`http://localhost:5000/rating/${currentRestaurant.id}`);
+            const data = await res.json();
+
+            if (data.status === 'success') {
+                const avg = data.average || 0;
+                const rounded = Math.round(avg);
+                const total = data.total || 0;
+
+                const stars = document.getElementById('restaurantRating');
+                stars.querySelectorAll('.star').forEach((star, i) => {
+                    star.classList.toggle('active', i < rounded);
+                });
+
+                const ratingDisplay = document.getElementById('averageRating');
+                ratingDisplay.textContent = total > 0
+                    ? `${avg} (${total} reseñas)`
+                    : 'Sin calificaciones';
+            }
+        } catch {
+            showError('Error al obtener calificación');
+        }
+    }
+
+    async function addComment() {
+        if (!currentUser || !currentRestaurant) return;
+
+        const text = document.getElementById('newComment').value.trim();
+        if (!text) {
+            alert('Escribe un comentario');
+            return;
+        }
+
+        try {
+            const res = await fetch('http://localhost:5000/comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    text,
+                    restaurant_id: currentRestaurant.id
+                })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                document.getElementById('newComment').value = '';
+                await loadRatingsAndComments();
+            } else {
+                showError(data.message);
+            }
+        } catch {
+            showError('Error al enviar comentario');
+        }
+    }
+
+    async function setRating(rating) {
+        if (!currentUser || !currentRestaurant) {
+            alert('Inicia sesión para calificar');
+            return;
+        }
+
+        try {
+            const res = await fetch('http://localhost:5000/rate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    restaurant_id: currentRestaurant.id,
+                    score: rating
+                })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                await loadRatingsAndComments();
+            } else {
+                showError(data.message);
+            }
+        } catch {
+            showError('Error al enviar calificación');
+        }
+    }
+
+    function closeRestaurantModal() {
+        document.getElementById('restaurantModal').style.display = 'none';
+        userRating = 0;
+        document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const res = await fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                localStorage.setItem('token', data.token);
+                currentUser = data.user;
+                updateAuthUI();
+                closeModal('loginModal');
+                showSuccess('¡Bienvenido de nuevo!');
+            } else {
+                showError(data.message);
+            }
+        } catch {
+            showError('Error de red al iniciar sesión');
+        }
+    }
+
+    async function handleRegister(e) {
+        e.preventDefault();
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const budget = document.getElementById('registerBudget').value;
+
+        try {
+            const res = await fetch('http://localhost:5000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, budget })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                localStorage.setItem('token', data.token);
+                currentUser = data.user;
+                updateAuthUI();
+                closeModal('registerModal');
+                showSuccess('Registro exitoso');
+            } else {
+                showError(data.message);
+            }
+        } catch {
+            showError('Error de red al registrar');
+        }
+    }
+
+    function handleProfileUpdate(e) {
+        e.preventDefault();
+        const newBudget = document.getElementById('profileNewBudget').value;
+        currentUser.budget = newBudget;
+        closeModal('profileModal');
+        showSuccess('Presupuesto actualizado');
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        currentUser = null;
+        updateAuthUI();
+        showSuccess('Sesión cerrada');
+    }
+
+    function loadUser() {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            currentUser = { name: payload.username };
+            updateAuthUI();
+        } catch {
+            localStorage.removeItem('token');
+        }
+    }
+
+    function updateAuthUI() {
+        const guestView = document.getElementById('guestView');
+        const loggedInView = document.getElementById('loggedInView');
+        const userName = document.getElementById('userName');
+
+        if (currentUser) {
+            guestView.style.display = 'none';
+            loggedInView.style.display = 'flex';
+            userName.textContent = currentUser.name;
+        } else {
+            guestView.style.display = 'flex';
+            loggedInView.style.display = 'none';
+        }
+    }
+
+    function showProfile() {
+        if (!currentUser) return;
+        document.getElementById('profileName').textContent = currentUser.name;
+        document.getElementById('profileBudget').textContent = `Presupuesto: Q${currentUser.budget}`;
+        document.getElementById('profileNewBudget').value = currentUser.budget;
+        openModal('profileModal');
+    }
+
+    function openModal(id) {
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function showError(msg) {
+        alert('Error: ' + msg);
+    }
+
+    function showSuccess(msg) {
+        alert(msg);
+    }
+
+    window.onclick = function (e) {
+        document.querySelectorAll('.modal, .restaurant-modal').forEach(modal => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
