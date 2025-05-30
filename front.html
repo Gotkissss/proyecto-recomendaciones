@@ -20,7 +20,7 @@
             background-size: auto, auto, 60px 60px, cover;
             background-attachment: fixed;
             min-height: 100vh;
-            color: #333;
+            color: #000;
             position: relative;
         }
 
@@ -48,8 +48,8 @@
         .logo {
             font-size: 32px;
             font-weight: 800;
-            color: white;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+            color: #000;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
         }
 
 
@@ -67,8 +67,8 @@
 
         .user-name {
             font-weight: 600;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: #000;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
         }
 
         /* Buttons */
@@ -104,17 +104,17 @@
         .btn-primary {
             background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
             color: white;
-            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.5); /* azul oscuro */
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.5);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(96, 165, 250, 0.6); /* azul celeste */
+            box-shadow: 0 12px 35px rgba(96, 165, 250, 0.6);
         }
 
 
         .btn-secondary {
-            background: #1e3a8a; /* Azul oscuro */
+            background: #1e3a8a;
             color: white;
             border: none;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -192,9 +192,9 @@
         .filter-title {
             font-weight: 700;
             margin-bottom: 20px;
-            color: #fff;
+            color: #000;
             font-size: 18px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
         }
 
         .filter-group {
@@ -205,39 +205,38 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
+            color: #000;
         }
 
         .filter-group input, .filter-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(0, 0, 0, 0.2);
             border-radius: 12px;
             font-size: 14px;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
         }
 
         .filter-group input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(0, 0, 0, 0.6);
         }
 
         .filter-group input:focus, .filter-group select:focus {
             outline: none;
             border-color: #60a5fa;
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+            background: rgba(255, 255, 255, 0.9);
         }
 
         .filter-group select option {
-            background: #2c3e50;
-            color: #fff;
+            background: #fff;
+            color: #000;
         }
 
         .budget-display {
-            color: rgba(255, 255, 255, 0.9);
+            color: #000;
             font-weight: 600;
             margin-top: 5px;
         }
@@ -258,7 +257,7 @@
         }
 
         .checkbox-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .checkbox-item input[type="checkbox"] {
@@ -270,6 +269,7 @@
             margin: 0;
             cursor: pointer;
             font-size: 14px;
+            color: #000;
         }
 
         /* Restaurant Grid */
@@ -286,8 +286,8 @@
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 25px;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: #000;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
         }
 
         .restaurant-grid {
@@ -346,13 +346,13 @@
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 12px;
-            color: #333;
+            color: #000;
         }
 
         .restaurant-price {
             font-size: 16px;
             font-weight: 600;
-            color: #60a5fa;
+            color: #1e3a8a;
             margin-bottom: 15px;
         }
 
@@ -365,16 +365,16 @@
 
         .feature-tag {
             background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
-            color: #60a5fa;
+            color: #1e3a8a;
             padding: 6px 10px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 500;
-            border: 1px solid rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(30, 58, 138, 0.2);
         }
 
         .restaurant-categories {
-            color: #666;
+            color: #333;
             font-size: 14px;
             font-weight: 500;
         }
@@ -393,7 +393,7 @@
         }
 
         .restaurant-modal-content {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
+            background: #fff;
             margin: 2% auto;
             border-radius: 24px;
             width: 90%;
@@ -406,7 +406,7 @@
 
         .restaurant-modal-header {
             background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
-            color: white;
+            color: #000;
             padding: 30px;
             border-radius: 24px 24px 0 0;
             position: relative;
@@ -419,12 +419,12 @@
             font-size: 32px;
             font-weight: bold;
             cursor: pointer;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(0, 0, 0, 0.8);
             transition: color 0.3s ease;
         }
 
         .restaurant-modal-close:hover {
-            color: white;
+            color: #000;
         }
 
         .restaurant-modal-body {
@@ -451,7 +451,21 @@
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 15px;
+            color: #000;
+        }
+
+        .modal-info-box {
+            background: #f0f9ff;
+            border: 2px solid #dbeafe;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .modal-info-box p {
+            margin: 0;
             color: #333;
+            font-size: 16px;
         }
 
         .modal-features {
@@ -465,10 +479,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 12px;
-            background: #f8faff;
-            border-radius: 8px;
+            padding: 12px 16px;
+            background: #f0f9ff;
+            border: 2px solid #93c5fd;
+            border-radius: 12px;
             font-size: 14px;
+            color: #000;
+            font-weight: 500;
         }
 
         .rating-section {
@@ -520,12 +537,12 @@
 
         .comment-author {
             font-weight: 600;
-            color: #60a5fa;
+            color: #1e3a8a;
             margin-bottom: 5px;
         }
 
         .comment-text {
-            color: #666;
+            color: #333;
             line-height: 1.5;
         }
 
@@ -541,12 +558,13 @@
             resize: vertical;
             min-height: 80px;
             font-family: inherit;
+            color: #000;
         }
 
         .add-comment textarea:focus {
             outline: none;
             border-color: #60a5fa;
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
         }
 
         /* Modals */
@@ -582,7 +600,7 @@
         .modal-title {
             font-size: 28px;
             font-weight: 700;
-            color: #333;
+            color: #000;
         }
 
         .close {
@@ -594,7 +612,7 @@
         }
 
         .close:hover {
-            color: #333;
+            color: #000;
         }
 
         .form-group {
@@ -605,7 +623,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #333;
+            color: #000;
         }
 
         .form-group input {
@@ -615,12 +633,13 @@
             border-radius: 12px;
             font-size: 16px;
             transition: border-color 0.3s ease;
+            color: #000;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: #60a5fa;
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
         }
 
         /* Profile Modal */
@@ -634,51 +653,51 @@
 
         .profile-info h3 {
             margin-bottom: 10px;
-            color: #333;
+            color: #000;
         }
 
         .budget-info {
             font-size: 18px;
             font-weight: 600;
-            color: #60a5fa;
+            color: #1e3a8a;
         }
 
         /* Loading and Error States */
         .loading {
             text-align: center;
             padding: 60px;
-            color: rgba(255, 255, 255, 0.8);
+            color: #000;
             font-size: 18px;
         }
 
         .error {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
-            color: #1e3a8a;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #fca5a5 100%);
+            color: #7f1d1d;
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 20px;
-            border: 1px solid #bfdbfe;
+            border: 1px solid #fca5a5;
         }
 
         .success {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
-            color: #2563eb;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
+            color: #064e3b;
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 20px;
-            border: 1px solid #dbeafe;
+            border: 1px solid #6ee7b7;
         }
 
         /* Empty State */
         .empty-state {
             text-align: center;
             padding: 80px 20px;
-            color: rgba(255, 255, 255, 0.8);
+            color: #000;
         }
 
         .empty-state h3 {
             margin-bottom: 15px;
-            color: #fff;
+            color: #000;
             font-size: 24px;
         }
 
@@ -781,6 +800,46 @@
                     </div>
 
                     <div class="filter-group">
+                        <label for="zoneFilter">Zona</label>
+                        <select id="zoneFilter">
+                            <option value="">Todas</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="ambianceFilter">Ambiente</label>
+                        <select id="ambianceFilter">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="paymentFilter">Métodos de Pago</label>
+                        <select id="paymentFilter">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="healthyFilter">Opciones Saludables</label>
+                        <select id="healthyFilter">
+                            <option value="">Todas</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="serviceLevelFilter">Nivel de Servicio</label>
+                        <select id="serviceLevelFilter">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="capacityFilter">Capacidad mínima</label>
+                        <input type="number" id="capacityFilter" min="0" placeholder="Ej: 50">
+                    </div>
+
+                    <div class="filter-group">
                         <label>Características Especiales</label>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
@@ -807,52 +866,6 @@
                                 <input type="checkbox" id="delivery">
                                 <label for="delivery">🚚 Delivery</label>
                             </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="takeout">
-                                <label for="takeout">📦 Para Llevar</label>
-                            </div>
-                            <div class="filter-group">
-                                <label for="zoneFilter">Zona</label>
-                                <select id="zoneFilter">
-                                    <option value="">Todas</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="ambianceFilter">Ambiente</label>
-                                <select id="ambianceFilter">
-                                    <option value="">Todos</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="paymentFilter">Métodos de Pago</label>
-                                <select id="paymentFilter">
-                                    <option value="">Todos</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="healthyFilter">Opciones Saludables</label>
-                                <select id="healthyFilter">
-                                    <option value="">Todas</option>
-                                    <option value="sí">Sí</option>
-                                    <option value="no">No</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="serviceLevelFilter">Nivel de Servicio</label>
-                                <select id="serviceLevelFilter">
-                                    <option value="">Todos</option>
-                                </select>
-                            </div>
-
-                            <div class="filter-group">
-                                <label for="capacityFilter">Capacidad mínima</label>
-                                <input type="number" id="capacityFilter" min="0" placeholder="Ej: 50">
-                            </div>
-
                         </div>
                     </div>
 
@@ -881,7 +894,79 @@
             <div class="restaurant-modal-body">
                 <div class="modal-section">
                     <h3>🏷️ Categorías</h3>
-                    <div id="modalCategories"></div>
+                    <div class="modal-info-box">
+                        <p id="modalCategories"></p>
+                    </div>
+                </div>
+                
+                <div class="modal-section">
+                    <h3>📍 Dirección</h3>
+                    <div class="modal-info-box">
+                        <p id="modalAddress"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>📌 Zona</h3>
+                    <div class="modal-info-box">
+                        <p id="modalZone"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>🌿 Ambiente</h3>
+                    <div class="modal-info-box">
+                        <p id="modalAmbiance"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>💳 Métodos de Pago</h3>
+                    <div class="modal-info-box">
+                        <p id="modalPaymentMethods"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>🥗 Opciones Saludables</h3>
+                    <div class="modal-info-box">
+                        <p id="modalHealthyOptions"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>👨‍🍳 Nivel de Servicio</h3>
+                    <div class="modal-info-box">
+                        <p id="modalServiceLevel"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>👥 Capacidad</h3>
+                    <div class="modal-info-box">
+                        <p id="modalCapacity"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>📞 Teléfono</h3>
+                    <div class="modal-info-box">
+                        <p id="modalPhone"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>🕒 Horarios</h3>
+                    <div class="modal-info-box">
+                        <p id="modalSchedule"></p>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>⭐ Calificación</h3>
+                    <div class="modal-info-box">
+                        <p id="modalRating"></p>
+                    </div>
                 </div>
                 
                 <div class="modal-section">
@@ -1001,689 +1086,3 @@
             </form>
         </div>
     </div>
-
-   <script>
-    let currentUser = null;
-    let currentRestaurant = null;
-    let userRating = 0;
-    let restaurants = [];
-
-    
-async function init() {
-    console.log('Iniciando aplicación...');
-    loadUser();
-    
-    try {
-
-        await loadRestaurantsFromBackend();
-        console.log('Restaurantes cargados:', restaurants.length);
-
-        await loadCategories();
-        console.log('Categorías cargadas');
-        
-
-        displayRestaurants(restaurants);
-        console.log('Restaurantes mostrados');
-        
-
-        await populateDynamicFilters();
-        console.log('Filtros dinámicos cargados');
-        
-    } catch (error) {
-        console.error('Error en init():', error);
-        displayRestaurants([]);
-    }
-    
-    // Configurar event listeners al final
-    setupEventListeners();
-    console.log('Event listeners configurados');
-}
-
-    // REEMPLAZA tu función loadRestaurantsFromBackend() con esta:
-    async function loadRestaurantsFromBackend() {
-        console.log('Intentando cargar restaurantes desde backend...');
-        try {
-            const res = await fetch('http://localhost:5000/restaurants');
-            console.log('Respuesta del servidor:', res.status);
-            
-            const data = await res.json();
-            console.log('Datos recibidos:', data);
-            
-            if (data.status === 'success') {
-                restaurants = data.restaurants.map(r => ({
-                    id: r.id,
-                    name: r.name,
-                    zone: r.zone,
-                    categories: r.categories,
-                    price_range: `Q${r.price}`,
-                    ambiance: r.ambiance,
-                    pet_friendly: r.pet_friendly,
-                    kids_games: r.kids_games,
-                    accessible: r.accessible,
-                    promotions: r.promotions,
-                    reservations: r.accepts_reservations,
-                    payment_methods: r.payment_methods,
-                    healthy_options: r.healthy_options,
-                    service_level: r.service_level,
-                    capacity: r.capacity,
-                    phone: r.phone,
-                    delivery: r.delivery,
-                    address: r.address,
-                    schedule: r.schedule,
-                    rating: r.rating,
-                    reviews: r.reviews,
-                    image: "🍽️",
-                    features: {
-                        pet_friendly: r.pet_friendly,
-                        kids_games: r.kids_games,
-                        accessible: r.accessible,
-                        promotions: r.promotions,
-                        reservations: r.accepts_reservations,
-                        delivery: r.delivery
-                    },
-                    ratings: [],
-                    comments: []
-                }));
-                
-                console.log('Restaurantes procesados:', restaurants.length);
-            } else {
-                console.error('Error en respuesta del servidor:', data.message);
-                showError('Error al cargar restaurantes: ' + data.message);
-            }
-        } catch (err) {
-            console.error('Error de red:', err);
-            showError('Error de red al obtener restaurantes: ' + err.message);
-        }
-    }
-
-    function setupEventListeners() {
-        document.getElementById('searchInput').addEventListener('input', applyFilters);
-        const budgetRange = document.getElementById('budgetRange');
-        budgetRange.addEventListener('input', function () {
-            const value = this.value;
-            document.getElementById('budgetValue').textContent =
-                value == 1000 ? 'Sin límite' : `Q${value}`;
-        });
-
-        document.getElementById('categoryFilter').addEventListener('change', applyFilters);
-
-        document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', applyFilters);
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', handleLogin);
-        document.getElementById('registerForm').addEventListener('submit', handleRegister);
-        document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
-        document.getElementById('zoneFilter').addEventListener('change', applyFilters);
-        document.getElementById('ambianceFilter').addEventListener('change', applyFilters);
-        document.getElementById('paymentFilter').addEventListener('change', applyFilters);
-        document.getElementById('healthyFilter').addEventListener('change', applyFilters);
-        document.getElementById('serviceLevelFilter').addEventListener('change', applyFilters);
-        document.getElementById('capacityFilter').addEventListener('input', applyFilters);
-
-    }
-
-    async function loadCategories() {
-        try {
-            const res = await fetch('http://localhost:5000/categories');
-            const data = await res.json();
-            
-            if (data.status === 'success') {
-                const categoryFilter = document.getElementById('categoryFilter');
-                data.categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category;
-                    option.textContent = category;
-                    categoryFilter.appendChild(option);
-                });
-            } else {
-                console.error('Error al cargar categorías:', data.message);
-            }
-        } catch (error) {
-            console.error('Error de red al cargar categorías:', error);
-            // Fallback: extraer categorías de los restaurantes cargados
-            const categories = new Set();
-            restaurants.forEach(restaurant => {
-                if (restaurant.categories && Array.isArray(restaurant.categories)) {
-                    restaurant.categories.forEach(category => categories.add(category));
-                }
-            });
-
-            const categoryFilter = document.getElementById('categoryFilter');
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                option.textContent = category;
-                categoryFilter.appendChild(option);
-            });
-        }
-    }
-
-    // 2. REEMPLAZAR la función populateDynamicFilters() existente con esta:
-    async function populateDynamicFilters() {
-        try {
-            // Usar el endpoint combinado (más eficiente)
-            const res = await fetch('http://localhost:5000/filter-options');
-            const data = await res.json();
-            
-            if (data.status === 'success') {
-                const options = data.filter_options;
-                
-                fillSelectWithOptions('zoneFilter', options.zones);
-                fillSelectWithOptions('ambianceFilter', options.ambiances);
-                fillSelectWithOptions('paymentFilter', options.payment_methods);
-                fillSelectWithOptions('serviceLevelFilter', options.service_levels);
-                
-                // Para opciones saludables, agregar las opciones específicas
-                const healthyFilter = document.getElementById('healthyFilter');
-                // Limpiar opciones existentes excepto la primera
-                while (healthyFilter.children.length > 1) {
-                    healthyFilter.removeChild(healthyFilter.lastChild);
-                }
-                
-                // Agregar opciones únicas de la base de datos
-                options.healthy_options.forEach(option => {
-                    const opt = document.createElement('option');
-                    opt.value = option.toLowerCase();
-                    opt.textContent = option;
-                    healthyFilter.appendChild(opt);
-                });
-            }
-        } catch (error) {
-            console.error('Error al cargar filtros dinámicos:', error);
-            
-            // Fallback: extraer de los datos ya cargados
-            loadDynamicFiltersFromLoadedData();
-        }
-    }
-
-
-    function displayRestaurants(restaurantsToShow) {
-        const grid = document.getElementById('restaurantGrid');
-        if (restaurantsToShow.length === 0) {
-            grid.innerHTML = `
-                <div class="empty-state">
-                    <h3>🔍 No se encontraron restaurantes</h3>
-                    <p>Intenta ajustar tus filtros de búsqueda</p>
-               
-                </div>
-            `;
-            return;
-        }
-
-        grid.innerHTML = restaurantsToShow.map(restaurant => {
-            const features = Object.keys(restaurant.features)
-                .filter(key => restaurant.features[key])
-                .slice(0, 3);
-
-            const featureTags = features.map(feature => {
-                const labels = {
-                    pet_friendly: '🐕 Pet Friendly',
-                    kids_games: '🎮 Juegos',
-                    accessible: '♿ Accesible',
-                    promotions: '🎯 Promociones',
-                    reservations: '📅 Reservas',
-                    delivery: '🚚 Delivery',
-                    takeout: '📦 Para Llevar',
-                    outdoor_seating: '🌿 Terraza',
-                    wifi: '📶 WiFi',
-                    parking: '🅿️ Parqueo',
-                    live_music: '🎵 Música',
-                    happy_hour: '🍹 Happy Hour'
-                };
-                return `<span class="feature-tag">${labels[feature]}</span>`;
-            }).join('');
-
-            return `
-                <div class="restaurant-card" onclick="showRestaurantDetail('${restaurant.id}')">
-                    <div class="restaurant-image">${restaurant.image}</div>
-                    <h3 class="restaurant-name">${restaurant.name}</h3>
-                    <div class="restaurant-price">${restaurant.price_range}</div>
-                    <div class="restaurant-features">${featureTags}</div>
-                    <div class="restaurant-categories">${restaurant.categories.join(' • ')}</div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function applyFilters() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const maxBudget = parseInt(document.getElementById('budgetRange').value);
-        const categoryFilter = document.getElementById('categoryFilter').value;
-
-        const zone = document.getElementById('zoneFilter').value.toLowerCase();
-        const ambiance = document.getElementById('ambianceFilter').value.toLowerCase();
-        const payment = document.getElementById('paymentFilter').value.toLowerCase();
-        const healthy = document.getElementById('healthyFilter').value;
-        const service = document.getElementById('serviceLevelFilter').value.toLowerCase();
-        const capacity = parseInt(document.getElementById('capacityFilter').value || 0);
-
-        const selectedFeatures = [];
-        document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked').forEach(cb => {
-            selectedFeatures.push(cb.id);
-        });
-
-        const filtered = restaurants.filter(restaurant => {
-            const matchesSearch = !searchTerm || restaurant.name.toLowerCase().includes(searchTerm)
-                || restaurant.categories.some(cat => cat.toLowerCase().includes(searchTerm));
-
-            const priceNum = parseInt(restaurant.price_range.replace(/[^\d]/g, '')) || 0;
-            const matchesBudget = maxBudget >= 1000 || priceNum <= maxBudget;
-
-            const matchesCategory = !categoryFilter || restaurant.categories.includes(categoryFilter);
-
-            const matchesFeatures = selectedFeatures.every(f => restaurant.features[f]);
-
-            const matchesZone = !zone || (restaurant.zone && restaurant.zone.toLowerCase().includes(zone));
-            const matchesAmbiance = !ambiance || (restaurant.ambiance && restaurant.ambiance.toLowerCase().includes(ambiance));
-            const matchesPayment = !payment || (restaurant.payment_methods && restaurant.payment_methods.toLowerCase().includes(payment));
-            const matchesHealthy = !healthy || (restaurant.healthy_options && restaurant.healthy_options.toLowerCase() === healthy);
-            const matchesService = !service || (restaurant.service_level && restaurant.service_level.toLowerCase().includes(service));
-            const matchesCapacity = !capacity || (restaurant.capacity && parseInt(restaurant.capacity) >= capacity);
-
-            return matchesSearch &&
-                matchesBudget &&
-                matchesCategory &&
-                matchesFeatures &&
-                matchesZone &&
-                matchesAmbiance &&
-                matchesPayment &&
-                matchesHealthy &&
-                matchesService &&
-                matchesCapacity;
-        });
-
-        displayRestaurants(filtered);
-    }
-
-
-    
-function showRestaurantDetail(id) {
-    currentRestaurant = restaurants.find(r => r.id === id);
-    if (!currentRestaurant) return;
-
-    document.getElementById('modalRestaurantName').textContent = currentRestaurant.name;
-    document.getElementById('modalRestaurantPrice').textContent = currentRestaurant.price_range;
-    document.getElementById('modalCategories').textContent = currentRestaurant.categories.join(' • ');
-
-    // Limpiar secciones anteriores
-    const oldExtras = document.querySelectorAll('.modal-section.extra');
-    oldExtras.forEach(el => el.remove());
-
-    // Insertar info adicional (zona, ambiente, métodos de pago, etc.)
-    const detailExtras = `
-        <div class="modal-section extra">
-            <h3>📍 Dirección</h3>
-            <p>${currentRestaurant.address || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>📌 Zona</h3>
-            <p>${currentRestaurant.zone || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>🌿 Ambiente</h3>
-            <p>${currentRestaurant.ambiance || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>💳 Métodos de Pago</h3>
-            <p>${currentRestaurant.payment_methods || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>🥗 Opciones Saludables</h3>
-            <p>${currentRestaurant.healthy_options || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>👨‍🍳 Nivel de Servicio</h3>
-            <p>${currentRestaurant.service_level || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>👥 Capacidad</h3>
-            <p>${currentRestaurant.capacity || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>📞 Teléfono</h3>
-            <p>${currentRestaurant.phone || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>🕒 Horarios</h3>
-            <p>${currentRestaurant.schedule || 'No disponible'}</p>
-        </div>
-        <div class="modal-section extra">
-            <h3>⭐ Calificación</h3>
-            <p>${currentRestaurant.rating || 'Sin calificación'} (${currentRestaurant.reviews || 0} reseñas)</p>
-        </div>
-    `;
-    document.getElementById('modalFeatures').insertAdjacentHTML('afterend', detailExtras);
-
-    // ACTUALIZADO: características especiales SÍ disponibles
-    const featureLabels = {
-        pet_friendly: '🐕 Pet Friendly',
-        kids_games: '🎮 Juegos para Niños',
-        accessible: '♿ Accesible',
-        promotions: '🎯 Promociones',
-        reservations: '📅 Acepta Reservas',
-        delivery: '🚚 Delivery',
-        takeout: '📦 Para Llevar'
-    };
-
-    document.getElementById('modalFeatures').innerHTML = Object.keys(currentRestaurant.features)
-        .filter(k => currentRestaurant.features[k])
-        .map(f => `<div class="modal-feature-item">${featureLabels[f]}</div>`)
-        .join('');
-
-    loadRatingsAndComments();
-    document.getElementById('addCommentSection').style.display = currentUser ? 'block' : 'none';
-    document.getElementById('restaurantModal').style.display = 'block';
-}
-
-
-
-    async function loadRatingsAndComments() {
-        if (!currentRestaurant) return;
-
-        const commentsSection = document.getElementById('commentsSection');
-
-        // 1. Obtener comentarios
-        try {
-            const res = await fetch(`http://localhost:5000/comments/${currentRestaurant.id}`);
-            const data = await res.json();
-
-            if (data.status === 'success') {
-                const comments = data.comments;
-                if (comments.length === 0) {
-                    commentsSection.innerHTML = '<p style="text-align:center; color:#555;">No hay comentarios aún.</p>';
-                } else {
-                    commentsSection.innerHTML = comments.map(c => `
-                        <div class="comment">
-                            <div class="comment-author">${c.author || 'Anónimo'}</div>
-                            <div class="comment-text">${c.text}</div>
-                        </div>
-                    `).join('');
-                }
-            } else {
-                showError('Error al cargar comentarios');
-            }
-        } catch {
-            showError('No se pudieron obtener los comentarios');
-        }
-
-        // 2. Obtener calificación promedio y cantidad
-        try {
-            const res = await fetch(`http://localhost:5000/rating/${currentRestaurant.id}`);
-            const data = await res.json();
-
-            if (data.status === 'success') {
-                const avg = data.average || 0;
-                const rounded = Math.round(avg);
-                const total = data.total || 0;
-
-                const stars = document.getElementById('restaurantRating');
-                stars.querySelectorAll('.star').forEach((star, i) => {
-                    star.classList.toggle('active', i < rounded);
-                });
-
-                const ratingDisplay = document.getElementById('averageRating');
-                ratingDisplay.textContent = total > 0
-                    ? `${avg} (${total} reseñas)`
-                    : 'Sin calificaciones';
-            }
-        } catch {
-            showError('Error al obtener calificación');
-        }
-    }
-
-
-    async function addComment() {
-        if (!currentUser || !currentRestaurant) return;
-
-        const text = document.getElementById('newComment').value.trim();
-        if (!text) {
-            alert('Escribe un comentario');
-            return;
-        }
-
-        try {
-            const res = await fetch('http://localhost:5000/comment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                },
-                body: JSON.stringify({
-                    text,
-                    restaurant_id: currentRestaurant.id
-                })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                document.getElementById('newComment').value = '';
-                await loadRatingsAndComments();
-            } else {
-                showError(data.message);
-            }
-        } catch {
-            showError('Error al enviar comentario');
-        }
-    }
-
-    async function setRating(rating) {
-        if (!currentUser || !currentRestaurant) {
-            alert('Inicia sesión para calificar');
-            return;
-        }
-
-        try {
-            const res = await fetch('http://localhost:5000/rate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                },
-                body: JSON.stringify({
-                    restaurant_id: currentRestaurant.id,
-                    score: rating
-                })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                await loadRatingsAndComments(); // recarga promedio y comentarios
-            } else {
-                showError(data.message);
-            }
-        } catch {
-            showError('Error al enviar calificación');
-        }
-    }
-
-
-    function closeRestaurantModal() {
-        document.getElementById('restaurantModal').style.display = 'none';
-        userRating = 0;
-        document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
-    }
-
-    async function handleLogin(e) {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-
-        try {
-            const res = await fetch('http://localhost:5000/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                localStorage.setItem('token', data.token);
-                currentUser = data.user;
-                updateAuthUI();
-                closeModal('loginModal');
-                showSuccess('¡Bienvenido de nuevo!');
-            } else {
-                showError(data.message);
-            }
-        } catch {
-            showError('Error de red al iniciar sesión');
-        }
-    }
-
-    async function handleRegister(e) {
-        e.preventDefault();
-        const name = document.getElementById('registerName').value;
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
-        const budget = document.getElementById('registerBudget').value;
-
-        try {
-            const res = await fetch('http://localhost:5000/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password, budget })
-            });
-            const data = await res.json();
-            if (data.status === 'success') {
-                localStorage.setItem('token', data.token);
-                currentUser = data.user;
-                updateAuthUI();
-                closeModal('registerModal');
-                showSuccess('Registro exitoso');
-            } else {
-                showError(data.message);
-            }
-        } catch {
-            showError('Error de red al registrar');
-        }
-    }
-
-    function handleProfileUpdate(e) {
-        e.preventDefault();
-        const newBudget = document.getElementById('profileNewBudget').value;
-        currentUser.budget = newBudget;
-        closeModal('profileModal');
-        showSuccess('Presupuesto actualizado');
-    }
-
-    function logout() {
-        localStorage.removeItem('token');
-        currentUser = null;
-        updateAuthUI();
-        showSuccess('Sesión cerrada');
-    }
-
-    function loadUser() {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            currentUser = { name: payload.username };
-            updateAuthUI();
-        } catch {
-            localStorage.removeItem('token');
-        }
-    }
-
-    function updateAuthUI() {
-        const guestView = document.getElementById('guestView');
-        const loggedInView = document.getElementById('loggedInView');
-        const userName = document.getElementById('userName');
-
-        if (currentUser) {
-            guestView.style.display = 'none';
-            loggedInView.style.display = 'flex';
-            userName.textContent = currentUser.name;
-        } else {
-            guestView.style.display = 'flex';
-            loggedInView.style.display = 'none';
-        }
-    }
-
-    function showProfile() {
-        if (!currentUser) return;
-        document.getElementById('profileName').textContent = currentUser.name;
-        document.getElementById('profileBudget').textContent = `Presupuesto: Q${currentUser.budget}`;
-        document.getElementById('profileNewBudget').value = currentUser.budget;
-        openModal('profileModal');
-    }
-
-    function openModal(id) {
-        document.getElementById(id).style.display = 'block';
-    }
-
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-
-    function showError(msg) {
-        alert(msg);
-    }
-
-    function showSuccess(msg) {
-        alert(msg);
-    }
-
-    window.onclick = function (e) {
-        document.querySelectorAll('.modal, .restaurant-modal').forEach(modal => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-    }
-
-    function fillSelectWithOptions(selectId, options) {
-        const select = document.getElementById(selectId);
-        
-        // Limpiar opciones existentes excepto la primera ("Todas" o similar)
-        while (select.children.length > 1) {
-            select.removeChild(select.lastChild);
-        }
-        
-        // Agregar nuevas opciones
-        options.forEach(option => {
-            if (option && option.trim()) {
-                const opt = document.createElement('option');
-                opt.value = option.toLowerCase();
-                opt.textContent = option;
-                select.appendChild(opt);
-            }
-        });
-    }
-
-    function loadDynamicFiltersFromLoadedData() {
-        // Fallback function que extrae los filtros de los restaurantes ya cargados
-        const zones = new Set();
-        const ambiances = new Set();
-        const payments = new Set();
-        const services = new Set();
-        const healthyOptions = new Set();
-
-        restaurants.forEach(r => {
-            if (r.zone && r.zone.trim()) zones.add(r.zone.trim());
-            if (r.ambiance && r.ambiance.trim()) ambiances.add(r.ambiance.trim());
-            if (r.payment_methods && r.payment_methods.trim()) payments.add(r.payment_methods.trim());
-            if (r.service_level && r.service_level.trim()) services.add(r.service_level.trim());
-            if (r.healthy_options && r.healthy_options.trim()) healthyOptions.add(r.healthy_options.trim());
-        });
-
-        fillSelectWithOptions('zoneFilter', Array.from(zones));
-        fillSelectWithOptions('ambianceFilter', Array.from(ambiances));
-        fillSelectWithOptions('paymentFilter', Array.from(payments));
-        fillSelectWithOptions('serviceLevelFilter', Array.from(services));
-        
-        // Para opciones saludables
-        const healthyFilter = document.getElementById('healthyFilter');
-        while (healthyFilter.children.length > 1) {
-            healthyFilter.removeChild(healthyFilter.lastChild);
-        }
-        
-        Array.from(healthyOptions).forEach(option => {
-            const opt = document.createElement('option');
-            opt.value = option.toLowerCase();
-            opt.textContent = option;
-            healthyFilter.appendChild(opt);
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
-</script>
