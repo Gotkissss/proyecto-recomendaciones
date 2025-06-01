@@ -283,8 +283,6 @@ def get_restaurant_rating(restaurant_id):
     except Exception as e:
         return handle_error(e, "Error al obtener calificación")
 
-# Agregar estos endpoints al final de tu backend.py, antes del if __name__ == '__main__':
-
 @app.route('/filter-options', methods=['GET'])
 def get_filter_options():
     try:
@@ -338,7 +336,7 @@ def get_filter_options():
 
     except Exception as e:
         import traceback
-        traceback.print_exc()  # 👈 esto imprimirá el error exacto en consola
+        traceback.print_exc() 
         return handle_error(e, "Failed to fetch filter options")
 
 
@@ -422,8 +420,27 @@ def get_service_levels():
     except Exception as e:
         return handle_error(e, "Failed to fetch service levels")
 
-from recomendaciones import *
-
+@app.route('/me', methods=['GET'])
+@token_required
+def get_current_user():
+    """Obtiene información del usuario actual basado en el token"""
+    try:
+        user_id = request.current_user['user_id']
+        query = """
+        MATCH (u:User {id: $user_id})
+        RETURN u.id as id, u.name as name, u.email as email, u.budget as budget
+        """
+        result = db.execute_query(query, {"user_id": user_id})
+        
+        if not result:
+            return jsonify({"status": "error", "message": "Usuario no encontrado"}), 404
+            
+        user_data = result[0]
+        return jsonify({"status": "success", "user": user_data})
+        
+    except Exception as e:
+        return handle_error(e, "Error al obtener información del usuario")
+    
 #-----------------------------------------------------------------------------------------------------#
 if __name__ == '__main__':
     try:

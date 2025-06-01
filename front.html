@@ -1089,38 +1089,107 @@
 
     // Función init corregida
     async function init() {
-        console.log('Iniciando aplicación...');
+        console.log('🚀 ==> INICIANDO APLICACIÓN <==');
+        console.log('👤 Estado inicial de currentUser:', currentUser);
 
-        // 1. Cargar datos del usuario (sincronizado)
-        await loadUser(); 
         try {
-            // 2. Cargar restaurantes desde el backend
-            await loadRestaurantsFromBackend();
+            // 1. Cargar usuario PRIMERO
+            console.log('📋 PASO 1: Cargando usuario...');
+            await loadUser();
+            console.log('👤 Usuario después de loadUser():', currentUser);
 
-            // 3. Si hay usuario, obtener preferencias y ordenar
+            // 2. Cargar restaurantes
+            console.log('📋 PASO 2: Cargando restaurantes...');
+            await loadRestaurantsFromBackend();
+            console.log('🍽️ Total restaurantes cargados:', restaurants.length);
+
+            // 3. DEBUGGING: Verificar si hay usuario logueado
             if (currentUser) {
+                console.log('✅ USUARIO DETECTADO:', currentUser.name);
+                console.log('🔍 PASO 3: Intentando cargar preferencias...');
+                
                 const prefs = await getUserPreferences();
-                console.log("📦 Preferencias recuperadas:", prefs);
-                if (prefs) {
+                console.log('📦 PREFERENCIAS OBTENIDAS:', prefs);
+                
+                if (prefs && Object.keys(prefs).length > 0) {
+                    console.log('✨ APLICANDO RECOMENDACIONES...');
+                    console.log('📊 Restaurantes ANTES del ordenamiento:', restaurants.slice(0, 5).map(r => r.name));
+                    
                     restaurants = ordenarRestaurantesPorPreferencias(restaurants, prefs);
+                    
+                    console.log('📊 Restaurantes DESPUÉS del ordenamiento:', restaurants.slice(0, 5).map(r => r.name));
+                    console.log('🎯 ¡RECOMENDACIONES APLICADAS!');
+                    
+                    // Aplicar filtros automáticamente
+                    aplicarPreferenciasAFiltros(prefs);
+                } else {
+                    console.log('⚠️ NO SE ENCONTRARON PREFERENCIAS GUARDADAS');
                 }
+            } else {
+                console.log('❌ NO HAY USUARIO LOGUEADO');
             }
 
-            // 4. Cargar categorías y filtros, y luego mostrar
+            // 4. Cargar categorías y filtros
+            console.log('📋 PASO 4: Cargando categorías y filtros...');
             await loadCategories();
-            displayRestaurants(restaurants);
             await populateDynamicFilters();
 
+            // 5. Mostrar restaurantes
+            console.log('📋 PASO 5: Mostrando restaurantes...');
+            displayRestaurants(restaurants);
+            
+            console.log('✅ APLICACIÓN INICIALIZADA');
+
         } catch (error) {
-            console.error('Error en init():', error);
+            console.error('❌ ERROR EN INIT:', error);
             displayRestaurants([]);
         }
 
         setupEventListeners();
     }
 
+    function aplicarPreferenciasAFiltros(prefs) {
+        console.log('🎛️ Aplicando preferencias a filtros UI:', prefs);
+        
+        try {
+            // Aplicar filtros basados en preferencias
+            if (prefs.zone) {
+                const zoneFilter = document.getElementById('zoneFilter');
+                if (zoneFilter) {
+                    zoneFilter.value = prefs.zone.toLowerCase();
+                    console.log('📍 Zona preferida aplicada:', prefs.zone);
+                }
+            }
+            
+            if (prefs.payment_methods) {
+                const paymentFilter = document.getElementById('paymentFilter');
+                if (paymentFilter) {
+                    paymentFilter.value = prefs.payment_methods.toLowerCase();
+                    console.log('💳 Método de pago preferido aplicado:', prefs.payment_methods);
+                }
+            }
+            
+            if (prefs.healthy_options) {
+                const healthyFilter = document.getElementById('healthyFilter');
+                if (healthyFilter) {
+                    healthyFilter.value = prefs.healthy_options.toLowerCase();
+                    console.log('🥗 Opciones saludables aplicadas:', prefs.healthy_options);
+                }
+            }
+            
+            if (prefs.pet_friendly) {
+                const petCheckbox = document.getElementById('pet_friendly');
+                if (petCheckbox) {
+                    petCheckbox.checked = true;
+                    console.log('🐕 Pet friendly activado');
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ Error aplicando preferencias a filtros:', error);
+        }
+    }
 
-    // También corrige la función loadRestaurantsFromBackend para mejor debugging
     async function loadRestaurantsFromBackend() {
         console.log('Intentando cargar restaurantes desde backend...');
         try {
@@ -1132,7 +1201,6 @@
             
             if (data.status === 'success') {
                 restaurants = data.restaurants.map(r => {
-                    // Debug: mostrar datos de un restaurante para verificar la estructura
                     if (data.restaurants.indexOf(r) === 0) {
                         console.log('Datos del primer restaurante:', r);
                     }
@@ -1174,7 +1242,6 @@
                 });
                 
                 console.log('Restaurantes procesados:', restaurants.length);
-                // Debug: mostrar el primer restaurante procesado
                 if (restaurants.length > 0) {
                     console.log('Primer restaurante procesado:', restaurants[0]);
                 }
@@ -1243,7 +1310,6 @@
         console.log('Poblando filtros dinámicos...');
         
         try {
-            // Intentar cargar desde el backend primero
             const res = await fetch('http://localhost:5000/filter-options');
             const data = await res.json();
             
@@ -1258,7 +1324,6 @@
                 fillSelectWithOptions('paymentFilter', options.payment_methods, 'Todos los métodos');
                 fillSelectWithOptions('serviceLevelFilter', options.service_levels, 'Todos los niveles');
                 
-                // Manejar opciones saludables por separado
                 const healthyFilter = document.getElementById('healthyFilter');
                 healthyFilter.innerHTML = '<option value="">Todas las opciones</option>';
                 
@@ -1292,7 +1357,6 @@
             const select = document.getElementById(selectId);
             if (!select) return;
 
-            // Limpiar y agregar opción por defecto
             select.innerHTML = `<option value="">${defaultText}</option>`;
 
             const uniqueOptions = new Set();
@@ -1311,14 +1375,11 @@
             Array.from(uniqueOptions).sort().forEach(option => {
                 const opt = document.createElement('option');
                 opt.value = option;
-                opt.textContent = option.charAt(0).toUpperCase() + option.slice(1); // Capitalizar
+                opt.textContent = option.charAt(0).toUpperCase() + option.slice(1); 
                 select.appendChild(opt);
             });
         }
 
-
-
-    // Función mejorada para cargar filtros desde datos locales
     function loadDynamicFiltersFromLoadedData() {
         console.log('Cargando filtros desde datos de restaurantes locales...');
         
@@ -1429,7 +1490,7 @@
         }).join('');
     }
 
-    function applyFilters() {
+    async function applyFilters() {
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const maxBudget = parseInt(document.getElementById('budgetRange').value);
         const categoryFilter = document.getElementById('categoryFilter').value;
@@ -1485,7 +1546,7 @@
         });
 
         displayRestaurants(filtered);
-        // Guardar preferencias si hay usuario
+        
         if (currentUser) {
             const userFilters = {
                 pet_friendly: document.getElementById('pet_friendly').checked,
@@ -1493,9 +1554,17 @@
                 healthy_options: document.getElementById('healthyFilter').value,
                 zone: document.getElementById('zoneFilter').value
             };
-            saveUserPreferences(userFilters);
+            
+            const hasActiveFilters = userFilters.pet_friendly || 
+                                    userFilters.payment_methods || 
+                                    userFilters.healthy_options || 
+                                    userFilters.zone;
+            
+            if (hasActiveFilters) {
+                console.log('💾 Guardando preferencias del usuario:', userFilters);
+                await saveUserPreferences(userFilters);
+            }
         }
-
     }
 
     function showRestaurantDetail(id) {
@@ -1735,23 +1804,111 @@
 
     async function loadUser() {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+            console.log('🚫 No hay token, usuario no logueado');
+            currentUser = null;
+            updateAuthUI();
+            return;
+        }
 
         try {
+            console.log('🔐 Token encontrado, verificando usuario...');
             const res = await fetch('http://localhost:5000/me', {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             });
+            
             const data = await res.json();
+            console.log('📡 Respuesta del servidor /me:', data);
+            
             if (data.status === 'success') {
                 currentUser = data.user;
+                console.log('✅ Usuario cargado exitosamente:', currentUser.name);
                 updateAuthUI();
             } else {
+                console.log('❌ Token inválido, removiendo...');
                 localStorage.removeItem('token');
+                currentUser = null;
+                updateAuthUI();
             }
-        } catch {
+        } catch (error) {
+            console.error('❌ Error verificando token:', error);
             localStorage.removeItem('token');
+            currentUser = null;
+            updateAuthUI();
+        }
+    }
+
+    function aplicarPreferenciasAFiltros(prefs) {
+        console.log('🎛️ ==> APLICANDO PREFERENCIAS A FILTROS UI <==');
+        console.log('📝 Preferencias recibidas:', prefs);
+        
+        try {
+            // Zona
+            if (prefs.zone) {
+                const zoneFilter = document.getElementById('zoneFilter');
+                if (zoneFilter) {
+                    const options = Array.from(zoneFilter.options);
+                    const matchingOption = options.find(opt => 
+                        opt.value.toLowerCase() === prefs.zone.toLowerCase()
+                    );
+                    
+                    if (matchingOption) {
+                        zoneFilter.value = matchingOption.value;
+                        console.log('📍 Zona aplicada:', matchingOption.value);
+                    } else {
+                        console.log('⚠️ No se encontró opción para zona:', prefs.zone);
+                    }
+                }
+            }
+            
+            // Métodos de pago
+            if (prefs.payment_methods) {
+                const paymentFilter = document.getElementById('paymentFilter');
+                if (paymentFilter) {
+                    const options = Array.from(paymentFilter.options);
+                    const matchingOption = options.find(opt => 
+                        opt.value.toLowerCase().includes(prefs.payment_methods.toLowerCase()) ||
+                        prefs.payment_methods.toLowerCase().includes(opt.value.toLowerCase())
+                    );
+                    
+                    if (matchingOption) {
+                        paymentFilter.value = matchingOption.value;
+                        console.log('💳 Método de pago aplicado:', matchingOption.value);
+                    }
+                }
+            }
+            
+            // Opciones saludables
+            if (prefs.healthy_options) {
+                const healthyFilter = document.getElementById('healthyFilter');
+                if (healthyFilter) {
+                    const options = Array.from(healthyFilter.options);
+                    const matchingOption = options.find(opt => 
+                        opt.value.toLowerCase() === prefs.healthy_options.toLowerCase()
+                    );
+                    
+                    if (matchingOption) {
+                        healthyFilter.value = matchingOption.value;
+                        console.log('🥗 Opciones saludables aplicadas:', matchingOption.value);
+                    }
+                }
+            }
+            
+            // Pet friendly
+            if (prefs.pet_friendly) {
+                const petCheckbox = document.getElementById('pet_friendly');
+                if (petCheckbox) {
+                    petCheckbox.checked = true;
+                    console.log('🐕 Pet friendly activado');
+                }
+            }
+            
+            console.log('✅ Preferencias aplicadas a filtros UI');
+            
+        } catch (error) {
+            console.error('❌ Error aplicando preferencias a filtros:', error);
         }
     }
 
