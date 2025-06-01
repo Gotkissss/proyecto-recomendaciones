@@ -1090,35 +1090,35 @@
     // Función init corregida
     async function init() {
         console.log('Iniciando aplicación...');
-        loadUser();
-        
+
+        // 1. Cargar datos del usuario (sincronizado)
+        await loadUser(); 
         try {
-            // Cargar restaurantes primero
+            // 2. Cargar restaurantes desde el backend
             await loadRestaurantsFromBackend();
-            console.log("Restaurantes cargados:", restaurants.length);
 
+            // 3. Si hay usuario, obtener preferencias y ordenar
+            if (currentUser) {
+                const prefs = await getUserPreferences();
+                console.log("📦 Preferencias recuperadas:", prefs);
+                if (prefs) {
+                    restaurants = ordenarRestaurantesPorPreferencias(restaurants, prefs);
+                }
+            }
 
-            // Cargar categorías
+            // 4. Cargar categorías y filtros, y luego mostrar
             await loadCategories();
-            console.log('Categorías cargadas');
-            
-            // Mostrar restaurantes
             displayRestaurants(restaurants);
-            console.log('Restaurantes mostrados');
-            
-            // IMPORTANTE: Cargar filtros dinámicos DESPUÉS de tener los restaurantes
             await populateDynamicFilters();
-            console.log('populateDynamicFilters() ya terminó');
 
-            
         } catch (error) {
             console.error('Error en init():', error);
             displayRestaurants([]);
         }
-        
+
         setupEventListeners();
-        console.log('Event listeners configurados');
     }
+
 
     // También corrige la función loadRestaurantsFromBackend para mejor debugging
     async function loadRestaurantsFromBackend() {
@@ -1177,8 +1177,6 @@
                 // Debug: mostrar el primer restaurante procesado
                 if (restaurants.length > 0) {
                     console.log('Primer restaurante procesado:', restaurants[0]);
-                    console.log('Features del primer restaurante:', restaurants[0].features);
-
                 }
             } else {
                 console.error('Error en respuesta del servidor:', data.message);
@@ -1487,6 +1485,17 @@
         });
 
         displayRestaurants(filtered);
+        // Guardar preferencias si hay usuario
+        if (currentUser) {
+            const userFilters = {
+                pet_friendly: document.getElementById('pet_friendly').checked,
+                payment_methods: document.getElementById('paymentFilter').value,
+                healthy_options: document.getElementById('healthyFilter').value,
+                zone: document.getElementById('zoneFilter').value
+            };
+            saveUserPreferences(userFilters);
+        }
+
     }
 
     function showRestaurantDetail(id) {
@@ -1724,18 +1733,28 @@
         showSuccess('Sesión cerrada');
     }
 
-    function loadUser() {
+    async function loadUser() {
         const token = localStorage.getItem('token');
         if (!token) return;
 
         try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            currentUser = { name: payload.username };
-            updateAuthUI();
+            const res = await fetch('http://localhost:5000/me', {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                currentUser = data.user;
+                updateAuthUI();
+            } else {
+                localStorage.removeItem('token');
+            }
         } catch {
             localStorage.removeItem('token');
         }
     }
+
 
     function updateAuthUI() {
         const guestView = document.getElementById('guestView');
@@ -1786,5 +1805,6 @@
 
     document.addEventListener('DOMContentLoaded', init);
 </script>
+<script src="preferencias.js"></script>
 </body>
 </html>

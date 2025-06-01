@@ -15,7 +15,9 @@ def save_preferences():
         SET u.preferences = $preferences
         RETURN u.preferences AS preferences
         """
-        result = db.execute_query(query, {"user_id": user_id, "preferences": str(preferences)})
+        import json
+        result = db.execute_query(query, {"user_id": user_id, "preferences": json.dumps(preferences)})
+
         return jsonify({"status": "success", "preferences": result[0]["preferences"]})
     except Exception as e:
         return handle_error(e, "Error al guardar preferencias")
@@ -31,6 +33,10 @@ def get_preferences():
         """
         result = db.execute_query(query, {"user_id": user_id})
         prefs = result[0].get("preferences") if result else None
+        if prefs:
+            import json
+            prefs = json.loads(prefs)
+            
         return jsonify({"status": "success", "preferences": prefs})
     except Exception as e:
         return handle_error(e, "Error al obtener preferencias")

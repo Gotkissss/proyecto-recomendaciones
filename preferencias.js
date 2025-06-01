@@ -35,18 +35,37 @@ async function getUserPreferences() {
     return null;
 }
 
-// Ordena los restaurantes dándoles prioridad a los que coinciden con preferencias
-function ordenarRestaurantesPorPreferencias(restaurants, preferences) {
-    if (!preferences) return restaurants;
+    // Ordena los restaurantes dándoles prioridad a los que coinciden con preferencias
+    function ordenarRestaurantesPorPreferencias(restaurants, preferences) {
+        if (!preferences) return restaurants;
 
-    function scoreRestaurant(r) {
+        function scoreRestaurant(r) {
         let score = 0;
-        if (preferences.pet_friendly && r.features.pet_friendly) score += 5;
-        if (preferences.payment_methods && r.payment_methods?.toLowerCase().includes(preferences.payment_methods.toLowerCase())) score += 3;
-        if (preferences.healthy_options && r.healthy_options?.toLowerCase() === preferences.healthy_options.toLowerCase()) score += 2;
-        if (preferences.zone && r.zone?.toLowerCase() === preferences.zone.toLowerCase()) score += 1;
+
+        // Preferencias booleanas
+        if (preferences.pet_friendly && r.features.pet_friendly) score += 10;
+
+        // Métodos de pago
+        if (preferences.payment_methods && r.payment_methods?.toLowerCase().includes(preferences.payment_methods.toLowerCase())) {
+            score += 7;
+        }
+
+        // Opciones saludables
+        if (preferences.healthy_options && r.healthy_options?.toLowerCase() === preferences.healthy_options.toLowerCase()) {
+            score += 5;
+        }
+
+        // Zona
+        if (preferences.zone && r.zone?.toLowerCase() === preferences.zone.toLowerCase()) {
+            score += 3;
+        }
+
+        // Extra: leve penalización si NO coincide con algo importante
+        if (preferences.pet_friendly && !r.features.pet_friendly) score -= 3;
+
         return score;
     }
+
 
     return restaurants.slice().sort((a, b) => scoreRestaurant(b) - scoreRestaurant(a));
 }
