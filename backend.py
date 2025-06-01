@@ -287,7 +287,6 @@ def get_restaurant_rating(restaurant_id):
 
 @app.route('/filter-options', methods=['GET'])
 def get_filter_options():
-    """Obtiene todas las opciones únicas para los filtros dinámicos"""
     try:
         query = """
         MATCH (r:Restaurant)
@@ -299,36 +298,49 @@ def get_filter_options():
             COLLECT(DISTINCT r.nivel_servicio) as service_levels
         """
         result = db.execute_query(query)
-        
+
+        print("🔍 Resultado crudo del query de filtros:", result)
+
         if result:
             data = result[0]
-            # Filtrar valores nulos y vacíos
+
+            # Separador de comas si los campos vienen como string
+            def split_and_clean(list_of_strings):
+                result = set()
+                for item in list_of_strings:
+                    if item:
+                        parts = item.split(',') if isinstance(item, str) else [item]
+                        for part in parts:
+                            part_clean = str(part).strip()
+                            if part_clean:
+                                result.add(part_clean)
+                return sorted(result)
+
             filter_options = {
-                'zones': [z for z in data['zones'] if z and z.strip()],
-                'ambiances': [a for a in data['ambiances'] if a and a.strip()],
-                'payment_methods': [p for p in data['payment_methods'] if p and p.strip()],
-                'healthy_options': [h for h in data['healthy_options'] if h and h.strip()],
-                'service_levels': [s for s in data['service_levels'] if s and s.strip()]
+                'zones': split_and_clean(data.get('zones', [])),
+                'ambiances': split_and_clean(data.get('ambiances', [])),
+                'payment_methods': split_and_clean(data.get('payment_methods', [])),
+                'healthy_options': split_and_clean(data.get('healthy_options', [])),
+                'service_levels': split_and_clean(data.get('service_levels', []))
             }
-            
+
             return jsonify({
-                "status": "success", 
+                "status": "success",
                 "filter_options": filter_options
             })
-        else:
-            return jsonify({
-                "status": "success", 
-                "filter_options": {
-                    'zones': [],
-                    'ambiances': [],
-                    'payment_methods': [],
-                    'healthy_options': [],
-                    'service_levels': []
-                }
-            })
-            
+
+        return jsonify({
+            "status": "success",
+            "filter_options": {
+                'zones': [], 'ambiances': [], 'payment_methods': [], 'healthy_options': [], 'service_levels': []
+            }
+        })
+
     except Exception as e:
+        import traceback
+        traceback.print_exc()  # 👈 esto imprimirá el error exacto en consola
         return handle_error(e, "Failed to fetch filter options")
+
 
 @app.route('/zones', methods=['GET'])
 def get_zones():
@@ -410,6 +422,7 @@ def get_service_levels():
     except Exception as e:
         return handle_error(e, "Failed to fetch service levels")
 
+from recomendaciones import *
 
 #-----------------------------------------------------------------------------------------------------#
 if __name__ == '__main__':
@@ -419,5 +432,7 @@ if __name__ == '__main__':
         app.run(debug=True, host='0.0.0.0', port=5000)
     except Exception as e:
         logger.error(f"Startup failed: {e}")
+        import traceback 
+        traceback.print_exc()
     finally:
         db.close()
